@@ -1,8 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <memory>
 #include "WindowManager.h"
 #include "Swiat.h"
+#include "Zwierzeta.h"
 int main() {
     int width, height;
     std::cout << "Wysokosc: ";
@@ -11,11 +13,12 @@ int main() {
     std::cin >> width;
     WindowManager windowManager(width, height);
     Swiat world(width, height);
-    world.turn();
+    world.spawn(std::make_shared<Wilk>(Position({0, 0})), true);
     waddstr(windowManager.getBottomWindow(), "Korneliusz Wojnicz 198349");
     while (true) {
         windowManager.draw();
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        world.turn();
     }
     return 0;
 }

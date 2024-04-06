@@ -13,8 +13,8 @@ class Organizm;
  */
 typedef std::pair<int, int> Position;
 
-#define position_x(position) (position)->first
-#define position_y(position) (positio)->y
+#define position_x(position) (position).first
+#define position_y(position) (position).second
 
 class OrganizmCompare {
 public:
@@ -38,5 +38,6 @@ public:
     Swiat(int width, int height);
     Organizm* getEntityAt(const Position& position);
     void moveOrganism(const Position&, std::shared_ptr<Organizm>);
-    void spawn(std::shared_ptr<Organizm> organizm);
+    void spawn(std::shared_ptr<Organizm> organism, bool forceInsert = false);
+    bool isLegalPosition(const Position& position);
 };

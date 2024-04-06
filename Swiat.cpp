@@ -21,8 +21,10 @@ Organizm *Swiat::getEntityAt(const Position &position) {
     return nullptr;
 }
 
-void Swiat::spawn(std::shared_ptr<Organizm> organizm) {
-    this->organismActionQueue.push(organizm);
+void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
+    this->organismActionQueue.push(organism);
+    if (forceInsert)
+        mapper.insert({organism->getPosition(), organism});
 }
 
 Swiat::Swiat(int width, int height) : width(width), height(height) {}
@@ -63,3 +65,6 @@ bool OrganizmCompare::operator()(const std::shared_ptr<Organizm>& a, const std::
 }
 
 
+bool Swiat::isLegalPosition(const Position &position) {
+    return position_x(position) >= 0 && position_x(position) < width && position_y(position) >= 0 && position_y(position) < height;
+}

@@ -3,6 +3,8 @@
 //
 #include "Organizm.h"
 
+
+
 void Organizm::kill() {
     this->alive = false;
 }
@@ -25,7 +27,7 @@ void Organizm::endTurn() {
     return age;
 }
 
-void Organizm::collide(Organizm *collider, const Swiat& world) {
+void Organizm::collide(Organizm *collider, Swiat& world) {
     if (collider->getAttack() >= this->getAttack())
         this->kill();
     else
@@ -36,7 +38,7 @@ int Organizm::getAggressiveness() const {
     return aggressiveness;
 }
 
-void Organizm::move(Swiat &world, Position &&newPosition) {
+void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
     auto collideeOrganism = world.getEntityAt(newPosition);
     if (collideeOrganism) {
         collideeOrganism->collide(this, world);
@@ -47,3 +49,21 @@ void Organizm::move(Swiat &world, Position &&newPosition) {
         world.moveOrganism(oldPosition, shared_from_this());
     }
 }
+
+Organizm::Organizm(const Organizm &right)  : enable_shared_from_this() {
+    attack = right.attack;
+    aggressiveness = right.aggressiveness;
+    alive = right.alive;
+    position = right.position;
+    age = right.age;
+}
+
+void Organizm::setPosition(Position &&position) {
+    this->position = position;
+}
+
+std::default_random_engine& getRNG() {
+    static std::default_random_engine rng;
+    return rng;
+}
+
