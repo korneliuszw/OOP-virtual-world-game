@@ -1,12 +1,14 @@
 #pragma once
 
 #include <utility>
-
+#include <memory>
 #include "Swiat.h"
 
 constexpr int MAX_NEIGHBOURS = 8;
-
-class Organizm {
+constexpr int NON_MOVABLE_ORGANISM = -1;
+class Organizm
+: public std::enable_shared_from_this<Organizm>
+        {
 private:
     bool alive = true;
     int attack = 0;
@@ -20,7 +22,9 @@ public:
     [[nodiscard]] int getAttack() const;
     [[nodiscard]] const Position& getPosition() const;
     [[nodiscard]] int getAge() const;
-    virtual void act(const Swiat& world) = 0;
+    [[nodiscard]] int getAggressiveness() const;
+    virtual void move(Swiat& world, Position&& newPosition);
+    virtual void act(Swiat& world) = 0;
     virtual void collide(Organizm*, const Swiat&);
     virtual void draw() = 0;
 

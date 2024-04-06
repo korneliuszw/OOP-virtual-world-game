@@ -31,3 +31,19 @@ void Organizm::collide(Organizm *collider, const Swiat& world) {
     else
         collider->kill();
 }
+
+int Organizm::getAggressiveness() const {
+    return aggressiveness;
+}
+
+void Organizm::move(Swiat &world, Position &&newPosition) {
+    auto collideeOrganism = world.getEntityAt(newPosition);
+    if (collideeOrganism) {
+        collideeOrganism->collide(this, world);
+    }
+    if (this->isAlive()) {
+        auto oldPosition = this->position;
+        this->position = newPosition;
+        world.moveOrganism(oldPosition, shared_from_this());
+    }
+}

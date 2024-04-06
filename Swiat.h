@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <queue>
-#include <unordered_map>
+#include <map>
+#include <memory>
 
 // forward declaration
 class Organizm;
@@ -12,22 +13,30 @@ class Organizm;
  */
 typedef std::pair<int, int> Position;
 
-
 #define position_x(position) (position)->first
 #define position_y(position) (positio)->y
 
+class OrganizmCompare {
+public:
+    /**
+     * Implementacja zasady pierwszenstwa w poruszaniu
+     */
+    bool operator()(const std::shared_ptr<Organizm>& a, const std::shared_ptr<Organizm>& b);
+};
 
-
+typedef std::priority_queue<std::shared_ptr<Organizm>, std::vector<std::shared_ptr<Organizm>>, OrganizmCompare> OrganismQueue;
 class Swiat {
-friend int main(int, char**);
 private:
     int width;
     int height;
-    std::priority_queue<std::tuple<Organizm*>, std::vector<Organizm*>, > organismActionQueue;
-    std::unordered_map<Position, Organizm*>
-    void turn();
-    void loop();
-    Swiat(int width, int height): height(height), width(width) {}
+    OrganismQueue organismActionQueue;
+    std::map<Position, std::shared_ptr<Organizm>> mapper;
+    void actTurn();
+    void endTurn();
 public:
+    void turn();
+    Swiat(int width, int height);
     Organizm* getEntityAt(const Position& position);
+    void moveOrganism(const Position&, std::shared_ptr<Organizm>);
+    void spawn(std::shared_ptr<Organizm> organizm);
 };
