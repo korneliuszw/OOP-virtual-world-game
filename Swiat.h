@@ -3,6 +3,7 @@
 #include <queue>
 #include <map>
 #include <memory>
+#include "WindowManager.h"
 
 // forward declaration
 class Organizm;
@@ -33,6 +34,8 @@ private:
     std::map<Position, std::shared_ptr<Organizm>> mapper;
     void actTurn();
     void endTurn();
+    bool changed = true;
+
 public:
     void turn();
     Swiat(int width, int height);
@@ -40,4 +43,6 @@ public:
     void moveOrganism(const Position&, std::shared_ptr<Organizm>);
     void spawn(std::shared_ptr<Organizm> organism, bool forceInsert = false);
     bool isLegalPosition(const Position& position);
+    void draw(WindowManager& manager);
+    [[nodiscard]] bool hasChanged() const;
 };

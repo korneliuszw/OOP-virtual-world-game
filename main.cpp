@@ -16,6 +16,9 @@ int main() {
     world.spawn(std::make_shared<Wilk>(Position({0, 0})), true);
     waddstr(windowManager.getBottomWindow(), "Korneliusz Wojnicz 198349");
     while (true) {
+        if (world.hasChanged()) {
+            world.draw(windowManager);
+        }
         windowManager.draw();
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
         world.turn();

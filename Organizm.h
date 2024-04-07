@@ -29,7 +29,7 @@ public:
     virtual void moveThisOrganism(Swiat& world, Position&& newPosition);
     virtual void act(Swiat& world) = 0;
     virtual void collide(Organizm*, Swiat&);
-    virtual void draw() = 0;
+    [[nodiscard]] virtual const char symbol() = 0;
     virtual Organizm* clone() = 0;
     virtual ~Organizm() = default;
     void endTurn();

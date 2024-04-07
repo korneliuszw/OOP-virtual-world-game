@@ -33,9 +33,6 @@ void Zwierzeta::act(Swiat &world) {
     }
 }
 
-void Zwierzeta::draw() {
-
-}
 
 void Zwierzeta::collide(Organizm * organism, Swiat & world) {
     // mate only if same type

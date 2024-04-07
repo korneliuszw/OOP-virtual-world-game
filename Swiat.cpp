@@ -3,6 +3,7 @@
 //
 #include "Swiat.h"
 #include "Organizm.h"
+#include "Logger.h"
 
 void Swiat::actTurn() {
     // copy the queue
@@ -18,7 +19,10 @@ void Swiat::actTurn() {
 
 
 Organizm *Swiat::getEntityAt(const Position &position) {
-    return nullptr;
+    auto found = mapper.find(position);
+    if (found == mapper.end()) return nullptr;
+    // FIXME: this isn't safe?
+    return found->second.get();
 }
 
 void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
@@ -67,4 +71,26 @@ bool OrganizmCompare::operator()(const std::shared_ptr<Organizm>& a, const std::
 
 bool Swiat::isLegalPosition(const Position &position) {
     return position_x(position) >= 0 && position_x(position) < width && position_y(position) >= 0 && position_y(position) < height;
+}
+
+bool Swiat::hasChanged() const {
+    return changed;
+}
+
+void Swiat::draw(WindowManager& manager) {
+    logger.getDebugLogFile() << "Drawing" << std::endl;
+    WINDOW* gameWindow = manager.getMainGameWindow();
+    wclear(gameWindow);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            auto entity = getEntityAt({x, y});
+            wmove(gameWindow, x, y);
+            if (entity)
+                waddch(gameWindow, entity->symbol());
+            else
+                waddch(gameWindow, 'X');
+        }
+    }
+    changed = false;
+    logger.getDebugLogFile() << "Finished drawing" << std::endl;
 }

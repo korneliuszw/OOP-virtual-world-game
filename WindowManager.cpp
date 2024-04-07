@@ -24,6 +24,7 @@ WindowManager::WindowManager(int gameWidth, int gameHeight) {
     logger.getDebugLogFile() << "screen w: " << screenWidth << " h:" << screenHeight << std::endl;
     int bottomPaneHeight = 5;
     if (screenHeight - bottomPaneHeight < gameHeight || screenWidth < gameWidth) {
+        endwin();
         std::cerr << "ERROR: Current window can't fit the game\n";
         std::exit(1);
     }

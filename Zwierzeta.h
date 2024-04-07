@@ -15,8 +15,6 @@ protected:
 public:
     void act(Swiat &world) override;
     void collide(Organizm*, Swiat&) override;
-    void draw() override;
-
 };
 
 class Wilk : public Zwierzeta {
@@ -25,6 +23,10 @@ public:
 
     Organizm *clone() override {
         return new Wilk{*this};
+    }
+
+    const char symbol() override {
+        return 'W';
     }
 
 };
