@@ -16,8 +16,11 @@ class Organizm
     Position position;
     int age = 0;
     void kill();
+    int id = 0;
 protected:
     Organizm(int attack, int aggressiveness, Position&& position): attack(attack), aggressiveness(aggressiveness), position(std::move(position)) {}
+    [[nodiscard]] virtual std::string name() const = 0;
+    std::string organismName;
 public:
     Organizm(const Organizm& right);
     [[nodiscard]] bool isAlive() const;
@@ -30,10 +33,11 @@ public:
     virtual void act(Swiat& world) = 0;
     virtual void collide(Organizm*, Swiat&);
     [[nodiscard]] virtual const char symbol() = 0;
-    [[nodiscard]] virtual const char* name() = 0;
+    [[nodiscard]] const std::string& getName() const;
     virtual Organizm* clone() = 0;
     virtual ~Organizm() = default;
     void endTurn();
+    void setId(int id);
 };
 
 std::default_random_engine& getRNG();

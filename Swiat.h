@@ -3,6 +3,8 @@
 #include <queue>
 #include <map>
 #include <memory>
+#include <unordered_map>
+#include <string>
 #include "WindowManager.h"
 
 // forward declaration
@@ -35,6 +37,7 @@ private:
     void actTurn();
     void endTurn();
     bool changed = true;
+    std::unordered_map<std::string, int> organismTypeCounter;
 
 public:
     void turn();

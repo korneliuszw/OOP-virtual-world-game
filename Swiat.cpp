@@ -26,6 +26,15 @@ Organizm *Swiat::getEntityAt(const Position &position) {
 }
 
 void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
+    auto name = typeid(*organism).name();
+    logger.getDebugLogFile() << "spawned" << name << std::endl;
+    auto counter=  organismTypeCounter.find(name);
+    if (counter != organismTypeCounter.end()) {
+        organism->setId(++counter->second);
+    } else {
+        organism->setId(0);
+        organismTypeCounter.insert({name, 0});
+    }
     this->organismActionQueue.push(organism);
     if (forceInsert)
         mapper.insert({organism->getPosition(), organism});

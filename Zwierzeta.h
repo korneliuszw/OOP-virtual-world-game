@@ -29,7 +29,7 @@ public:
         return 'W';
     }
 
-    const char *name() override {
+    std::string name() const override {
         return "Wilk";
     }
 
