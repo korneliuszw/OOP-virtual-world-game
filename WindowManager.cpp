@@ -3,19 +3,14 @@
 //
 
 #include "WindowManager.h"
+#include "Logger.h"
 #include <cstdlib>
 #include <cstddef>
 #include <iostream>
 using std::size_t;
 
+
 WindowManager::WindowManager(int gameWidth, int gameHeight) {
-    size_t screenHeight = getmaxy(stdscr);
-    size_t screenWidth = getmaxx(stdscr);
-    int bottomPaneHeight = 10;
-    if (screenHeight - bottomPaneHeight < gameHeight || screenWidth < gameWidth) {
-        std::cerr << "Current window can't fit the game";
-        std::exit(1);
-    }
     screen = initscr();
     clear();
     cbreak();
@@ -23,11 +18,21 @@ WindowManager::WindowManager(int gameWidth, int gameHeight) {
     nodelay(screen, TRUE);
     keypad(screen, TRUE);
     nonl();
+    curs_set(0);
+    int screenHeight = getmaxy(stdscr);
+    int screenWidth = getmaxx(stdscr);
+    logger.getDebugLogFile() << "screen w: " << screenWidth << " h:" << screenHeight << std::endl;
+    int bottomPaneHeight = 5;
+    if (screenHeight - bottomPaneHeight < gameHeight || screenWidth < gameWidth) {
+        std::cerr << "ERROR: Current window can't fit the game\n";
+        std::exit(1);
+    }
     this->mainGameWindow = createWindow(0, 0, screenWidth, screenHeight - bottomPaneHeight);
     this->bottomWindow  = createWindow(0, screenHeight - bottomPaneHeight, screenWidth, bottomPaneHeight);
 }
 
 WINDOW *WindowManager::createWindow(int x, int y, int w, int h) {
+    logger.getDebugLogFile() << "created window x:" << x << " y:" << y << " w:" << w << " h:" << h << std::endl;
     return newwin(h, w, y, x);
 }
 
