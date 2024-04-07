@@ -13,5 +13,7 @@ add_executable(Projekt1 main.cpp
         WindowManager.h
         Zwierzeta.cpp
         Zwierzeta.h
+        Logger.cpp
+        Logger.h
 )
 target_link_libraries(Projekt1 PRIVATE ${CURSES_LIBRARIES})
