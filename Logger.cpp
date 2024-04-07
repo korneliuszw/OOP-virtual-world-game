@@ -5,10 +5,15 @@
 #include "Logger.h"
 
 std::ofstream &Logger::getDebugLogFile() {
+    this->debuggerLogger.debugLogFile << "[" << this->debuggerLogger.n << "] ";
+    this->debuggerLogger.n+=1;
     return this->debuggerLogger.debugLogFile;
 }
 
 Logger::InfoLogger &Logger::getInfoLogFile()  {
+    this->getDebugLogFile();
+    this->infoLogger.infoLogFile << "[" << this->infoLogger.n << "] ";
+    this->infoLogger.n += 1;
     return this->infoLogger;
 }
 
@@ -21,8 +26,8 @@ Logger::InfoLogger::InfoLogger(Logger::DebugLogger &debugLogger) : debugLogger(d
 }
 
 Logger::InfoLogger &Logger::InfoLogger::operator<<(std::ostream &(*fun)(std::ostream &)) {
-    this->debugLogger.debugLogFile.flush();
-    this->infoLogFile.flush();
+    this->debugLogger.debugLogFile << std::endl;
+    this->infoLogFile << std::endl;
     return *this;
 }
 

@@ -13,12 +13,13 @@ class Logger {
     class DebugLogger {
     public:
         std::ofstream debugLogFile;
-
+        int n = 0;
         explicit DebugLogger();
     };
     class InfoLogger {
         DebugLogger& debugLogger;
     public:
+        int n = 0;
         std::ofstream infoLogFile;
         explicit InfoLogger(DebugLogger &debugLogger);
         template<typename T>

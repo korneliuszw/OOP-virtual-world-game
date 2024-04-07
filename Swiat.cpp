@@ -39,7 +39,10 @@ void Swiat::moveOrganism(const Position& oldPosition, std::shared_ptr<Organizm> 
 }
 
 void Swiat::turn() {
+    logger.getInfoLogFile() << "nowa tura" << std::endl;
     actTurn();
+    endTurn();
+    changed = true;
 }
 
 void Swiat::endTurn() {

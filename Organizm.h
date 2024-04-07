@@ -30,6 +30,7 @@ public:
     virtual void act(Swiat& world) = 0;
     virtual void collide(Organizm*, Swiat&);
     [[nodiscard]] virtual const char symbol() = 0;
+    [[nodiscard]] virtual const char* name() = 0;
     virtual Organizm* clone() = 0;
     virtual ~Organizm() = default;
     void endTurn();

@@ -1,11 +1,13 @@
 //
 // Created by kwojn on 4/6/2024.
 //
+#include <iostream>
 #include "Organizm.h"
-
+#include "Logger.h"
 
 
 void Organizm::kill() {
+    logger.getInfoLogFile() << name() << " zostal zabity" << std::endl;
     this->alive = false;
 }
 
@@ -28,6 +30,7 @@ void Organizm::endTurn() {
 }
 
 void Organizm::collide(Organizm *collider, Swiat& world) {
+    logger.getInfoLogFile() << collider->name() << " wszedl na pole " << name() << std::endl;
     if (collider->getAttack() >= this->getAttack())
         this->kill();
     else
@@ -46,6 +49,8 @@ void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
     if (this->isAlive()) {
         auto oldPosition = this->position;
         this->position = newPosition;
+        logger.getInfoLogFile() << this->name() << " przesunal sie na x=" << position_x(position)
+                                << " y=" << position_y(position) << std::endl;
         world.moveOrganism(oldPosition, shared_from_this());
     }
 }

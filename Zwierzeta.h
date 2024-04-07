@@ -29,6 +29,10 @@ public:
         return 'W';
     }
 
+    const char *name() override {
+        return "Wilk";
+    }
+
 };
 
 
