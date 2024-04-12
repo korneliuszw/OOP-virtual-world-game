@@ -4,33 +4,10 @@
 #include <iostream>
 #include <memory>
 #include "Zwierzeta.h"
+#include "Logger.h"
 
 void Zwierzeta::act(Swiat &world) {
-    std::uniform_int_distribution<int> dist(1, MAX_NEIGHBOURS);
-    int moves = MAX_NEIGHBOURS;
-    while (moves > 0) {
-        int move = dist(getRNG());
-        Position position = this->getPosition();
-        switch (move % moves) {
-            case 1:
-                position.first += 1;
-                break;
-            case 2:
-                position.first -= 1;
-                break;
-            case 3:
-                position.second += 1;
-                break;
-            case 4:
-                position.second -= 1;
-                break;
-        }
-        if (world.isLegalPosition(position)) {
-            this->moveThisOrganism(world, std::move(position));
-            return;
-        }
-        moves--;
-    }
+    this->moveThisOrganism(world, this->generateRandomLegalPosition(world));
 }
 
 
@@ -45,46 +22,39 @@ void Zwierzeta::collide(Organizm * organism, Swiat & world) {
 }
 
 void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
-    std::uniform_int_distribution<int> dist(1, 4);
-    int moves = 4;
-    while (moves > 0) {
-        int move = dist(getRNG());
-        Position position = getPosition();
-        auto &loverPosition = lover->getPosition();
-        switch (move % moves) {
-            case 1:
-                if (position_x(position) != position_x(loverPosition)
-                ) {
-                    position.first -= position_x(position) > position_x(loverPosition) ? 2 : 1;
-                }
-                else
-                    position.first -= 1;
-                break;
-            case 2:
-                if (position_x(position) != position_x(loverPosition))
-                    position.first += position_x(position) > position_x(loverPosition) ? 1 : 2;
-                else
-                    position.first += 1;
-                break;
-            case 3:
-                if (position_x(position) != position_x(loverPosition))
-                    position.second += 1;
-                else
-                    position.second -= position_y(position) > position_y(loverPosition) ? 1 : 2;
-                break;
-            case 4:
-                if (position_x(position) != position_x(loverPosition))
-                    position.second -= 1;
-                else
-                    position.second += position_y(position) > position_y(loverPosition) ? 1 : 2;
-        }
-        if (world.isLegalPosition(position)) {
-            auto copy = this->clone();
-            copy->setPosition(std::move(position));
-            world.spawn(std::shared_ptr<Organizm>(copy));
-            return;
-        }
-        moves--;
+    Position position = this->generateRandomLegalPosition(world);
+    auto copy = this->clone();
+    copy->setPosition(std::move(position));
+    logger.getInfoLogFile() << this->getName() << " romnozyl sie z " << lover->getName() << std::endl;
+    world.spawn(std::shared_ptr<Organizm>(copy));
+}
 
+void decodeMove(Position& position, int move) {
+    switch (move) {
+        case 0:
+            position.first += 1;
+            break;
+        case 1:
+            position.first -= 1;
+            break;
+        case 2:
+            position.second += 1;
+            break;
+        case 3:
+            position.second -= 1;
+            break;
     }
+}
+
+Position Zwierzeta::generateRandomLegalPosition(const Swiat& world) {
+    std::vector<Position> legalMoves;
+    for (int i = 0; i < MAX_NEIGHBOURS; i++) {
+        Position pos = this->getPosition();
+        decodeMove(pos, i);
+        if (world.isLegalPosition(pos))
+            legalMoves.push_back(pos);
+    }
+    std::uniform_int_distribution<int> dist(0, legalMoves.size() - 1);
+    int index = dist(rng);
+    return legalMoves[index];
 }

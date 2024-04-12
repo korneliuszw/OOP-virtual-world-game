@@ -18,7 +18,11 @@ class Organizm
     void kill();
     int id = 0;
 protected:
-    Organizm(int attack, int aggressiveness, Position&& position): attack(attack), aggressiveness(aggressiveness), position(std::move(position)) {}
+    std::mt19937 rng;
+    Organizm(int attack, int aggressiveness, Position&& position): attack(attack), aggressiveness(aggressiveness), position(std::move(position)) {
+        std::random_device dev;
+        rng = std::mt19937(dev());
+    }
     [[nodiscard]] virtual std::string name() const = 0;
     std::string organismName;
 public:
@@ -38,6 +42,5 @@ public:
     virtual ~Organizm() = default;
     void endTurn();
     void setId(int id);
+    bool operator==(const Organizm& other);
 };
-
-std::default_random_engine& getRNG();

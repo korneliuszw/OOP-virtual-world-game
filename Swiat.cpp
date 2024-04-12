@@ -22,7 +22,11 @@ Organizm *Swiat::getEntityAt(const Position &position) {
     auto found = mapper.find(position);
     if (found == mapper.end()) return nullptr;
     // FIXME: this isn't safe?
-    return found->second.get();
+    for (auto& item: found->second) {
+        if (item->isAlive())
+            return item.get();
+    }
+    return nullptr;
 }
 
 void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
@@ -37,14 +41,21 @@ void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
     }
     this->organismActionQueue.push(organism);
     if (forceInsert)
-        mapper.insert({organism->getPosition(), organism});
+        mapper.insert({organism->getPosition(), {organism}});
 }
 
 Swiat::Swiat(int width, int height) : width(width), height(height) {}
 
+
 void Swiat::moveOrganism(const Position& oldPosition, std::shared_ptr<Organizm> organism) {
-    mapper.erase(oldPosition);
-    mapper.insert({organism->getPosition(), organism});
+    auto existing = mapper.find(oldPosition);
+    if (existing != mapper.end() && existing->second.size() > 1) {
+        existing->second.remove(organism);
+        return;
+    }
+    else if (existing != mapper.end())
+        mapper.erase(oldPosition);
+    mapper.insert({organism->getPosition(), {organism}});
 }
 
 void Swiat::turn() {
@@ -57,12 +68,16 @@ void Swiat::turn() {
 void Swiat::endTurn() {
     organismActionQueue = OrganismQueue();
     for (const auto& item: mapper) {
-        auto organism = item.second;
-        if (!organism->isAlive()) {
-            mapper.erase(item.first);
-            continue;
+        auto organismList = item.second;
+        for (auto& organism: organismList) {
+            if (!organism->isAlive()) {
+                organismList.remove(organism);
+                continue;
+            }
+            organismActionQueue.push(organism);
         }
-        organismActionQueue.push(organism);
+        if (organismList.empty())
+            mapper.erase(item.first);
     }
 }
 
@@ -81,7 +96,7 @@ bool OrganizmCompare::operator()(const std::shared_ptr<Organizm>& a, const std::
 }
 
 
-bool Swiat::isLegalPosition(const Position &position) {
+bool Swiat::isLegalPosition(const Position &position) const {
     return position_x(position) >= 0 && position_x(position) < width && position_y(position) >= 0 && position_y(position) < height;
 }
 

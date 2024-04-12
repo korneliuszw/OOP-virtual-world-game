@@ -43,7 +43,7 @@ int Organizm::getAggressiveness() const {
 
 void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
     auto collideeOrganism = world.getEntityAt(newPosition);
-    if (collideeOrganism) {
+    if (collideeOrganism && collideeOrganism != this) {
         collideeOrganism->collide(this, world);
     }
     if (this->isAlive()) {
@@ -61,6 +61,8 @@ Organizm::Organizm(const Organizm &right)  : enable_shared_from_this() {
     alive = right.alive;
     position = right.position;
     age = right.age;
+    std::random_device dev;
+    rng = std::mt19937(dev());
 }
 
 void Organizm::setPosition(Position &&position) {
@@ -76,8 +78,6 @@ const std::string &Organizm::getName() const {
     return organismName;
 }
 
-std::default_random_engine& getRNG() {
-    static std::default_random_engine rng;
-    return rng;
+bool Organizm::operator==(const Organizm &other) {
+    return other.id == this->id;
 }
-

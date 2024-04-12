@@ -5,6 +5,8 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
+#include <list>
+#include <random>
 #include "WindowManager.h"
 
 // forward declaration
@@ -15,6 +17,7 @@ class Organizm;
  * second is y
  */
 typedef std::pair<int, int> Position;
+typedef std::list<std::shared_ptr<Organizm>> MultiOrganizmList;
 
 #define position_x(position) (position).first
 #define position_y(position) (position).second
@@ -33,19 +36,19 @@ private:
     int width;
     int height;
     OrganismQueue organismActionQueue;
-    std::map<Position, std::shared_ptr<Organizm>> mapper;
+    std::map<Position, MultiOrganizmList> mapper;
     void actTurn();
     void endTurn();
     bool changed = true;
     std::unordered_map<std::string, int> organismTypeCounter;
-
+    std::mt19937 rng;
 public:
     void turn();
     Swiat(int width, int height);
     Organizm* getEntityAt(const Position& position);
     void moveOrganism(const Position&, std::shared_ptr<Organizm>);
     void spawn(std::shared_ptr<Organizm> organism, bool forceInsert = false);
-    bool isLegalPosition(const Position& position);
+    bool isLegalPosition(const Position& position) const;
     void draw(WindowManager& manager);
     [[nodiscard]] bool hasChanged() const;
 };

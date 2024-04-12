@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include "Logger.h"
 #include "WindowManager.h"
 #include "Swiat.h"
 #include "Zwierzeta.h"
@@ -26,9 +27,8 @@ int main() {
         }
         if (world.hasChanged()) {
             world.draw(windowManager);
+            windowManager.draw();
         }
-        windowManager.draw();
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
     return 0;
 }

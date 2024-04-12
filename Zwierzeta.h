@@ -15,6 +15,7 @@ protected:
 public:
     void act(Swiat &world) override;
     void collide(Organizm*, Swiat&) override;
+    Position generateRandomLegalPosition(const Swiat& world);
 };
 
 class Wilk : public Zwierzeta {
