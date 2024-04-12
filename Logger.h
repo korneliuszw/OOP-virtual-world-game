@@ -33,12 +33,6 @@ public:
     std::ofstream &getDebugLogFile();
     InfoLogger &getInfoLogFile();
     Logger();
-    ~Logger() {
-        debuggerLogger.debugLogFile.flush();
-        debuggerLogger.debugLogFile.close();
-        infoLogger.infoLogFile.flush();
-        infoLogger.infoLogFile.close();
-    }
 };
 
 template<typename T>

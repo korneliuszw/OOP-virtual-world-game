@@ -20,9 +20,10 @@ Logger::InfoLogger &Logger::getInfoLogFile()  {
 Logger::Logger(): infoLogger(debuggerLogger) {
 
 }
-
-Logger::InfoLogger::InfoLogger(Logger::DebugLogger &debugLogger) : debugLogger(debugLogger) {
-    this->infoLogFile.open("info_log.txt");
+Logger::InfoLogger::InfoLogger(Logger::DebugLogger &debugLogger) : debugLogger(debugLogger), infoLogFile("info_log.txt") {
+    // reopen the file so it it's content gets cleared
+    this->infoLogFile.close();
+    this->infoLogFile.open("info_log.txt", std::ios::out |  std::ios::app);
 }
 
 Logger::InfoLogger &Logger::InfoLogger::operator<<(std::ostream &(*fun)(std::ostream &)) {
@@ -32,6 +33,7 @@ Logger::InfoLogger &Logger::InfoLogger::operator<<(std::ostream &(*fun)(std::ost
 }
 
 
-Logger::DebugLogger::DebugLogger() {
-    this->debugLogFile.open("debug_log.txt");
+Logger::DebugLogger::DebugLogger() : debugLogFile("debug_log.txt") {
+    this->debugLogFile.close();
+    this->debugLogFile.open("debug_log.txt", std::ios::out | std::ios::app);
 }
