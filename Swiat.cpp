@@ -111,7 +111,7 @@ void Swiat::draw(WindowManager& manager) {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             auto entity = getEntityAt({x, y});
-            wmove(gameWindow, x, y);
+            wmove(gameWindow, y, x);
             if (entity)
                 waddch(gameWindow, entity->symbol());
             else
