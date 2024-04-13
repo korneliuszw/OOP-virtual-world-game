@@ -16,11 +16,15 @@ protected:
     Zwierzeta(int attack, int aggressiveness, Position&& position): Organizm(attack, aggressiveness, std::move(position)) {}
 public:
     void act(Swiat &world) override;
-    void collide(Organizm*, Swiat&) override;
+    bool collide(Organizm*, Swiat&) override;
     Position generateRandomLegalPosition(const Swiat& world);
 };
 
 class Wilk : public Zwierzeta {
+protected:
+    std::string name() const override {
+        return "Wilk";
+    }
 public:
     explicit Wilk(Position&& pos): Zwierzeta(9, 5, std::move(pos)) {}
 
@@ -32,13 +36,14 @@ public:
         return 'W';
     }
 
-    std::string name() const override {
-        return "Wilk";
-    }
 
 };
 
 class Owca : public Zwierzeta {
+protected:
+    std::string name() const override {
+        return "Owca";
+    }
 public:
     explicit Owca(Position&& pos) : Zwierzeta(4, 4, std::move(pos)) {}
 
@@ -48,10 +53,29 @@ public:
     const char symbol() override {
         return 'O';
     }
+};
 
+class Zolw : public Zwierzeta {
+
+protected:
     std::string name() const override {
-        return "Owca";
+        return "Zolw";
     }
+
+public:
+    explicit Zolw(Position&& pos) : Zwierzeta(2, 1, std::move(pos)) {}
+    const char symbol() override {
+        return 'Z';
+    }
+
+    Organizm *clone() override {
+        return new Zolw{*this};
+    }
+    // 25% chance to move
+    void act(Swiat &world) override;
+
+protected:
+    bool didDeflectAttack(const Organizm *attacker) override;
 };
 
 

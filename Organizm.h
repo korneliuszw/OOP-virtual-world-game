@@ -18,6 +18,7 @@ class Organizm
     void kill();
     int id = 0;
 protected:
+    virtual bool didDeflectAttack(const Organizm* attacker);
     std::mt19937 rng;
     Organizm(int attack, int aggressiveness, Position&& position): attack(attack), aggressiveness(aggressiveness), position(std::move(position)) {
         std::random_device dev;
@@ -35,7 +36,10 @@ public:
     void setPosition(Position&& position);
     virtual void moveThisOrganism(Swiat& world, Position&& newPosition);
     virtual void act(Swiat& world) = 0;
-    virtual void collide(Organizm*, Swiat&);
+    /**
+     * @return false if the attack didnt succeed and both survived
+     */
+    virtual bool collide(Organizm *collider, Swiat &world);
     [[nodiscard]] virtual const char symbol() = 0;
     [[nodiscard]] const std::string& getName() const;
     virtual Organizm* clone() = 0;

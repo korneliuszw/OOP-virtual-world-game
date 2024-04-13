@@ -11,11 +11,11 @@ void Zwierzeta::act(Swiat &world) {
 }
 
 
-void Zwierzeta::collide(Organizm * organism, Swiat & world) {
-    if (typeid(*this) == typeid(*organism))
-        this->mate(organism, world);
-    else
-        Organizm::collide(organism, world);
+bool Zwierzeta::collide(Organizm * organism, Swiat & world) {
+    if (typeid(*this) != typeid(*organism))
+        return Organizm::collide(organism, world);
+    this->mate(organism, world);
+    return true;
 }
 
 void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
@@ -54,4 +54,15 @@ Position Zwierzeta::generateRandomLegalPosition(const Swiat& world) {
     std::uniform_int_distribution<int> dist(0, legalMoves.size() - 1);
     int index = dist(rng);
     return legalMoves[index];
+}
+
+bool Zolw::didDeflectAttack(const Organizm *attacker) {
+    return attacker->getAttack() < 5;
+}
+
+void Zolw::act(Swiat &world) {
+    std::uniform_int_distribution<int> dist(1,4);
+    int random = dist(rng);
+    if (random == 1)
+        Zwierzeta::act(world);
 }

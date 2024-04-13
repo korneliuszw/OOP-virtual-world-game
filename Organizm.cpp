@@ -29,12 +29,15 @@ void Organizm::endTurn() {
     return age;
 }
 
-void Organizm::collide(Organizm *collider, Swiat& world) {
-    logger.getInfoLogFile() << collider->getName() << " wszedl na pole " << name() << std::endl;
-    if (collider->getAttack() >= this->getAttack())
+bool Organizm::collide(Organizm *collider, Swiat& world) {
+    logger.getInfoLogFile() << collider->getName() << " wszedl na pole " << name() << std::endl;\
+    if (this->didDeflectAttack(collider))
+        return false;
+    else if (collider->getAttack() >= this->getAttack())
         this->kill();
     else
         collider->kill();
+    return true;
 }
 
 int Organizm::getAggressiveness() const {
@@ -47,7 +50,12 @@ void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
     this->position = newPosition;
     world.moveOrganism(oldPosition, shared_from_this());
     if (collideeOrganism && collideeOrganism != this) {
-        collideeOrganism->collide(this, world);
+        if (!collideeOrganism->collide(this, world)) {
+            // if both survived push attacker back
+            auto newPosition = std::move(this->position);
+            this->position = oldPosition;
+            world.moveOrganism(newPosition, shared_from_this());
+        }
     }
     if (this->isAlive()) {
         logger.getInfoLogFile() << this->getName() << " przesunal sie na x=" << position_x(position)
@@ -80,4 +88,8 @@ const std::string &Organizm::getName() const {
 
 bool Organizm::operator==(const Organizm &other) {
     return other.id == this->id;
+}
+
+bool Organizm::didDeflectAttack(const Organizm *attacker) {
+    return false;
 }
