@@ -43,15 +43,15 @@ int Organizm::getAggressiveness() const {
 
 void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
     auto collideeOrganism = world.getEntityAt(newPosition);
+    auto oldPosition = this->position;
+    this->position = newPosition;
+    world.moveOrganism(oldPosition, shared_from_this());
     if (collideeOrganism && collideeOrganism != this) {
         collideeOrganism->collide(this, world);
     }
     if (this->isAlive()) {
-        auto oldPosition = this->position;
-        this->position = newPosition;
         logger.getInfoLogFile() << this->getName() << " przesunal sie na x=" << position_x(position)
                                 << " y=" << position_y(position) << std::endl;
-        world.moveOrganism(oldPosition, shared_from_this());
     }
 }
 

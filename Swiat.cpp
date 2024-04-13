@@ -31,7 +31,7 @@ Organizm *Swiat::getEntityAt(const Position &position) {
 
 void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
     auto name = typeid(*organism).name();
-    logger.getDebugLogFile() << "spawned" << name << std::endl;
+    logger.getDebugLogFile() << "spawned " << name << std::endl;
     auto counter=  organismTypeCounter.find(name);
     if (counter != organismTypeCounter.end()) {
         organism->setId(++counter->second);
@@ -40,8 +40,7 @@ void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
         organismTypeCounter.insert({name, 0});
     }
     this->organismActionQueue.push(organism);
-    if (forceInsert)
-        mapper.insert({organism->getPosition(), {organism}});
+    insertOrganism(organism);
 }
 
 Swiat::Swiat(int width, int height) : width(width), height(height) {}
@@ -51,11 +50,10 @@ void Swiat::moveOrganism(const Position& oldPosition, std::shared_ptr<Organizm> 
     auto existing = mapper.find(oldPosition);
     if (existing != mapper.end() && existing->second.size() > 1) {
         existing->second.remove(organism);
-        return;
     }
     else if (existing != mapper.end())
         mapper.erase(oldPosition);
-    mapper.insert({organism->getPosition(), {organism}});
+    insertOrganism(organism);
 }
 
 void Swiat::turn() {
@@ -120,4 +118,12 @@ void Swiat::draw(WindowManager& manager) {
     }
     changed = false;
     logger.getDebugLogFile() << "Finished drawing" << std::endl;
+}
+
+void Swiat::insertOrganism(const std::shared_ptr<Organizm>& organism) {
+    auto positionOrganisms = mapper.find(organism->getPosition());
+    if (positionOrganisms != mapper.end())
+        positionOrganisms->second.push_back(organism);
+    else
+        mapper.insert({organism->getPosition(), {organism}});
 }

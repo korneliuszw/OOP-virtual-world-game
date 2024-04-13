@@ -12,9 +12,6 @@ void Zwierzeta::act(Swiat &world) {
 
 
 void Zwierzeta::collide(Organizm * organism, Swiat & world) {
-    // mate only if same type
-    // TODO: Will this work?
-    std::cout << typeid(*this).name() << "\n";
     if (typeid(*this) == typeid(*organism))
         this->mate(organism, world);
     else
@@ -25,7 +22,7 @@ void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
     Position position = this->generateRandomLegalPosition(world);
     auto copy = this->clone();
     copy->setPosition(std::move(position));
-    logger.getInfoLogFile() << this->getName() << " romnozyl sie z " << lover->getName() << std::endl;
+    logger.getInfoLogFile() << this->getName() << " rozmnozyl sie z " << lover->getName() << std::endl;
     world.spawn(std::shared_ptr<Organizm>(copy));
 }
 
