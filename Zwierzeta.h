@@ -9,6 +9,8 @@
 #include "Organizm.h"
 
 class Zwierzeta: public Organizm {
+    // helper function
+    static void translateMoveNumberToPosition(Position &position, int move);
     void mate(const Organizm* other, Swiat&);
 protected:
     Zwierzeta(int attack, int aggressiveness, Position&& position): Organizm(attack, aggressiveness, std::move(position)) {}
@@ -20,7 +22,7 @@ public:
 
 class Wilk : public Zwierzeta {
 public:
-    Wilk(Position&& pos): Zwierzeta(9, 5, std::move(pos)) {}
+    explicit Wilk(Position&& pos): Zwierzeta(9, 5, std::move(pos)) {}
 
     Organizm *clone() override {
         return new Wilk{*this};
@@ -34,6 +36,22 @@ public:
         return "Wilk";
     }
 
+};
+
+class Owca : public Zwierzeta {
+public:
+    explicit Owca(Position&& pos) : Zwierzeta(4, 4, std::move(pos)) {}
+
+    Owca *clone() override {
+        return new Owca{*this};
+    }
+    const char symbol() override {
+        return 'O';
+    }
+
+    std::string name() const override {
+        return "Owca";
+    }
 };
 
 

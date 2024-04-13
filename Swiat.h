@@ -42,7 +42,7 @@ private:
     bool changed = true;
     std::unordered_map<std::string, int> organismTypeCounter;
     std::mt19937 rng;
-    void insertOrganism(const std::shared_ptr<Organizm>& organism);
+    void insertOrganism(std::shared_ptr<Organizm> organism);
 public:
     void turn();
     Swiat(int width, int height);

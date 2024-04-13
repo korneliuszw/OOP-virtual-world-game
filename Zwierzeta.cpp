@@ -26,7 +26,7 @@ void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
     world.spawn(std::shared_ptr<Organizm>(copy));
 }
 
-void decodeMove(Position& position, int move) {
+void Zwierzeta::translateMoveNumberToPosition(Position& position, int move) {
     switch (move) {
         case 0:
             position.first += 1;
@@ -47,7 +47,7 @@ Position Zwierzeta::generateRandomLegalPosition(const Swiat& world) {
     std::vector<Position> legalMoves;
     for (int i = 0; i < MAX_NEIGHBOURS; i++) {
         Position pos = this->getPosition();
-        decodeMove(pos, i);
+        translateMoveNumberToPosition(pos, i);
         if (world.isLegalPosition(pos))
             legalMoves.push_back(pos);
     }

@@ -1,6 +1,7 @@
 //
 // Created by kwojn on 4/6/2024.
 //
+#include <algorithm>
 #include "Swiat.h"
 #include "Organizm.h"
 #include "Logger.h"
@@ -65,18 +66,19 @@ void Swiat::turn() {
 
 void Swiat::endTurn() {
     organismActionQueue = OrganismQueue();
-    for (const auto& item: mapper) {
-        auto organismList = item.second;
-        for (auto& organism: organismList) {
-            if (!organism->isAlive()) {
-                organismList.remove(organism);
-                continue;
+    for (auto it = mapper.begin(); it != mapper.end(); it++) {
+        auto& organismList = it->second;
+        organismList.remove_if([&](auto& organism) {
+            if (organism->isAlive()) {
+                organism->endTurn();
+                organismActionQueue.push(organism);
             }
-            organismActionQueue.push(organism);
+            return !organism->isAlive();
+        });
+        if (organismList.empty()) {
+            it = mapper.erase(it);
         }
-        if (organismList.empty())
-            mapper.erase(item.first);
-    }
+    };
 }
 
 
@@ -89,8 +91,8 @@ bool OrganizmCompare::operator()(const std::shared_ptr<Organizm>& a, const std::
     else if (b->getAggressiveness() == NON_MOVABLE_ORGANISM && a->getAggressiveness() != NON_MOVABLE_ORGANISM)
         return false;
     else if (a->getAggressiveness() == b->getAggressiveness())
-        return a->getAge() >= b->getAge();
-    return a->getAggressiveness() > b->getAggressiveness();
+        return a->getAge() < b->getAge();
+    return a->getAggressiveness() < b->getAggressiveness();
 }
 
 
@@ -120,7 +122,7 @@ void Swiat::draw(WindowManager& manager) {
     logger.getDebugLogFile() << "Finished drawing" << std::endl;
 }
 
-void Swiat::insertOrganism(const std::shared_ptr<Organizm>& organism) {
+void Swiat::insertOrganism(std::shared_ptr<Organizm> organism) {
     auto positionOrganisms = mapper.find(organism->getPosition());
     if (positionOrganisms != mapper.end())
         positionOrganisms->second.push_back(organism);
