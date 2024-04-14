@@ -14,7 +14,7 @@ class Zwierzeta: public Organizm {
 protected:
     Zwierzeta(int attack, int aggressiveness, Position&& position): Organizm(attack, aggressiveness, std::move(position)) {}
 public:
-    void act(Swiat &world) override;
+    virtual void act(Swiat &world) override;
     bool collide(Organizm*, Swiat&) override;
 };
 

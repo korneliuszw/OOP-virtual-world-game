@@ -15,5 +15,10 @@ add_executable(Projekt1 main.cpp
         Zwierzeta.h
         Logger.cpp
         Logger.h
+        Rosliny.cpp
+        Rosliny.h
+        Player.cpp
+        Player.h
+        Player.h
 )
 target_link_libraries(Projekt1 PRIVATE ${CURSES_LIBRARIES})

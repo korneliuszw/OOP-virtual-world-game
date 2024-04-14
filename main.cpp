@@ -7,6 +7,7 @@
 #include "Swiat.h"
 #include "Zwierzeta.h"
 #include "Rosliny.h"
+#include "Player.h"
 
 #define KEY_ENTER_KEYBOARD 13
 int main() {
@@ -27,6 +28,7 @@ int main() {
     world.spawn(std::make_shared<Trawa>(Position({1, 1})), true);
     world.spawn(std::make_shared<Trawa>(Position({2, 4})), true);
     world.spawn(std::make_shared<BarszczSosnowskiego>(Position{5, 5}), true);
+    world.spawn(std::make_shared<Player>(Position{1, 2}, &windowManager), true);
     waddstr(windowManager.getBottomWindow(), "Korneliusz Wojnicz 198349");
     int key = 0;
     while (true) {
