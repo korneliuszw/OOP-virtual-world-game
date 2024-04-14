@@ -10,15 +10,12 @@
 
 class Zwierzeta: public Organizm {
     // helper function
-    static void translateMoveNumberToPosition(Position &position, int move);
     void mate(const Organizm* other, Swiat&);
 protected:
     Zwierzeta(int attack, int aggressiveness, Position&& position): Organizm(attack, aggressiveness, std::move(position)) {}
-    virtual bool isLegalMove(const Position &position, Swiat &world, bool mating);
 public:
     void act(Swiat &world) override;
     bool collide(Organizm*, Swiat&) override;
-    Position generateRandomLegalPosition(Swiat &world, bool mating);
 };
 
 class Wilk : public Zwierzeta {

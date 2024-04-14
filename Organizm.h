@@ -12,10 +12,13 @@ class Organizm
         {
     bool alive = true;
     int attack = 0;
+public:
+    void setAttack(int attack);
+
+private:
     int aggressiveness = 0;
     Position position;
     int age = 0;
-    void kill();
     int id = 0;
 protected:
     virtual bool didDeflectAttack(const Organizm* attacker);
@@ -26,7 +29,11 @@ protected:
     }
     [[nodiscard]] virtual std::string name() const = 0;
     std::string organismName;
+    virtual bool isLegalMove(const Position &position, Swiat &world, bool skipOccupied);
+    static void translateMoveNumberToPosition(Position &position, int move);
+    Position generateRandomLegalPosition(Swiat &world, bool skipOccupied = false);
 public:
+    void kill();
     Organizm(const Organizm& right);
     [[nodiscard]] bool isAlive() const;
     [[nodiscard]] int getAttack() const;

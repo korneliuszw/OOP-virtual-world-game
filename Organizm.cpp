@@ -93,3 +93,42 @@ bool Organizm::operator==(const Organizm &other) {
 bool Organizm::didDeflectAttack(const Organizm *attacker) {
     return false;
 }
+
+Position Organizm::generateRandomLegalPosition(Swiat &world, bool skipOccupied){
+    std::vector<Position> legalMoves;
+    for (int i = 0; i < MAX_NEIGHBOURS; i++) {
+        Position pos = this->getPosition();
+        translateMoveNumberToPosition(pos, i);
+        if (world.isLegalPosition(pos) && isLegalMove(pos, world, false))
+            legalMoves.push_back(pos);
+    }
+    std::uniform_int_distribution<int> dist(0, legalMoves.size() - 1);
+    int index = dist(rng);
+    return legalMoves[index];
+}
+
+void Organizm::translateMoveNumberToPosition(Position& position, int move) {
+    switch (move) {
+        case 0:
+            position.first += 1;
+            break;
+        case 1:
+            position.first -= 1;
+            break;
+        case 2:
+            position.second += 1;
+            break;
+        case 3:
+            position.second -= 1;
+            break;
+    }
+}
+
+bool Organizm::isLegalMove(const Position &position, Swiat &world, bool skipOccupied) {
+    // when mating don't spawn in occupied fields because it could let to a lot of spawns fast
+    return !(skipOccupied && world.getEntityAt(position));
+}
+
+void Organizm::setAttack(int attack) {
+    Organizm::attack = attack;
+}

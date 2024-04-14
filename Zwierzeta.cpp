@@ -27,41 +27,6 @@ void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
     world.spawn(std::shared_ptr<Organizm>(copy));
 }
 
-void Zwierzeta::translateMoveNumberToPosition(Position& position, int move) {
-    switch (move) {
-        case 0:
-            position.first += 1;
-            break;
-        case 1:
-            position.first -= 1;
-            break;
-        case 2:
-            position.second += 1;
-            break;
-        case 3:
-            position.second -= 1;
-            break;
-    }
-}
-
-Position Zwierzeta::generateRandomLegalPosition(Swiat &world, bool mating = false) {
-    std::vector<Position> legalMoves;
-    for (int i = 0; i < MAX_NEIGHBOURS; i++) {
-        Position pos = this->getPosition();
-        translateMoveNumberToPosition(pos, i);
-        if (world.isLegalPosition(pos) && isLegalMove(pos, world, false))
-            legalMoves.push_back(pos);
-    }
-    std::uniform_int_distribution<int> dist(0, legalMoves.size() - 1);
-    int index = dist(rng);
-    return legalMoves[index];
-}
-
-bool Zwierzeta::isLegalMove(const Position &position, Swiat &world, bool mating) {
-    // when mating don't spawn in occupied fields because it could let to a lot of spawns fast
-    return !(mating && world.getEntityAt(position));
-}
-
 bool Zolw::didDeflectAttack(const Organizm *attacker) {
     return attacker->getAttack() < 5;
 }

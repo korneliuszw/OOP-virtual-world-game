@@ -40,7 +40,6 @@ void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
         organism->setId(0);
         organismTypeCounter.insert({name, 0});
     }
-    this->organismActionQueue.push(organism);
     insertOrganism(organism);
 }
 
