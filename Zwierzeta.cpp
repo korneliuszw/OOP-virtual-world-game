@@ -23,7 +23,7 @@ void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
     Position position = this->generateRandomLegalPosition(world, true);
     auto copy = this->clone();
     copy->setPosition(std::move(position));
-    logger.getInfoLogFile() << this->getName() << " rozmnozyl sie z " << lover->getName() << std::endl;
+    logger->getInfoLogFile() << this->getName() << " rozmnozyl sie z " << lover->getName() << std::endl;
     world.spawn(std::shared_ptr<Organizm>(copy));
 }
 
@@ -49,7 +49,7 @@ bool Antylopa::collide(Organizm *organizm, Swiat &swiat) {
     if (dist(rng) == 1) {
         auto pos = generateRandomLegalPosition(swiat, true);
         if (pos != this->getPosition()) {
-            logger.getInfoLogFile() << this->getName() << " uciekla przed " << organizm->getName() << std::endl;
+            logger->getInfoLogFile() << this->getName() << " uciekla przed " << organizm->getName() << std::endl;
             this->moveThisOrganism(swiat, std::move(pos));
             return true;
         }

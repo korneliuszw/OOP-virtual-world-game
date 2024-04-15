@@ -7,7 +7,7 @@
 
 
 void Organizm::kill() {
-    logger.getInfoLogFile() << getName() << " zostal zabity" << std::endl;
+    logger->getInfoLogFile() << getName() << " zostal zabity" << std::endl;
     this->alive = false;
 }
 
@@ -30,7 +30,7 @@ void Organizm::endTurn() {
 }
 
 bool Organizm::collide(Organizm *collider, Swiat& world) {
-    logger.getInfoLogFile() << collider->getName() << " wszedl na pole " << name() << std::endl;\
+    logger->getInfoLogFile() << collider->getName() << " wszedl na pole " << name() << std::endl;\
     if (this->didDeflectAttack(collider))
         return false;
     else if (collider->getAttack() >= this->getAttack())
@@ -58,7 +58,7 @@ void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
         }
     }
     if (this->isAlive()) {
-        logger.getInfoLogFile() << this->getName() << " przesunal sie na x=" << position_x(position)
+        logger->getInfoLogFile() << this->getName() << " przesunal sie na x=" << position_x(position)
                                 << " y=" << position_y(position) << std::endl;
     }
 }

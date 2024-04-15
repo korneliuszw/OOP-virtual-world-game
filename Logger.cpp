@@ -4,36 +4,42 @@
 
 #include "Logger.h"
 
-std::ofstream &Logger::getDebugLogFile() {
+std::ofstream &LoggerSystem::getDebugLogFile() {
     this->debuggerLogger.debugLogFile << "[" << this->debuggerLogger.n << "] ";
     this->debuggerLogger.n+=1;
     return this->debuggerLogger.debugLogFile;
 }
 
-Logger::InfoLogger &Logger::getInfoLogFile()  {
+LoggerSystem::InfoLogger &LoggerSystem::getInfoLogFile()  {
     this->getDebugLogFile();
     this->infoLogger.infoLogFile << "[" << this->infoLogger.n << "] ";
     this->infoLogger.n += 1;
     return this->infoLogger;
 }
 
-Logger::Logger(): infoLogger(debuggerLogger) {
-
-}
-Logger::InfoLogger::InfoLogger(Logger::DebugLogger &debugLogger) : debugLogger(debugLogger), infoLogFile("info_log.txt") {
+LoggerSystem::InfoLogger::InfoLogger(LoggerSystem::DebugLogger &debugLogger) : debugLogger(debugLogger), infoLogFile("info_log.txt") {
     // reopen the file so it it's content gets cleared
     this->infoLogFile.close();
     this->infoLogFile.open("info_log.txt", std::ios::out |  std::ios::app);
 }
 
-Logger::InfoLogger &Logger::InfoLogger::operator<<(std::ostream &(*fun)(std::ostream &)) {
+LoggerSystem::InfoLogger &LoggerSystem::InfoLogger::operator<<(std::ostream &(*fun)(std::ostream &)) {
     this->debugLogger.debugLogFile << std::endl;
     this->infoLogFile << std::endl;
+    flushNext = true;
+    this->infoLogFile << " from str logger: " <<  lastLogStream.str() << std::endl;
     return *this;
 }
 
+std::string LoggerSystem::InfoLogger::getLastOutput() {
+    this->infoLogFile << " from str: " <<  lastLogStream.str() << flushNext << std::endl;
+    return lastLogStream.str();
+}
 
-Logger::DebugLogger::DebugLogger() : debugLogFile("debug_log.txt") {
+
+LoggerSystem::DebugLogger::DebugLogger() : debugLogFile("debug_log.txt") {
     this->debugLogFile.close();
     this->debugLogFile.open("debug_log.txt", std::ios::out | std::ios::app);
 }
+
+LoggerSystem* logger = new LoggerSystem();

@@ -8,7 +8,7 @@
 
 
 void Player::act(Swiat &world) {
-    logger.getInfoLogFile() << "Ruch gracza" << std::endl;
+    logger->getInfoLogFile() << "Ruch gracza" << std::endl;
     WINDOW* gameWindow = windowManager->getMainGameWindow();
     curs_set(1);
     wmove(gameWindow, this->getPosition().second, this->getPosition().first + 1);
@@ -34,7 +34,7 @@ std::optional<Position> Player::getNewPositionFromUser(Swiat& world) {
     bool changed;
     while ((key = getch()) != ERR) {
         changed = false;
-        logger.getDebugLogFile() << " got key " << key << std::endl;
+        logger->getDebugLogFile() << " got key " << key << std::endl;
         switch (key) {
             case KEY_LEFT:
                 changed = true;

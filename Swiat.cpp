@@ -32,7 +32,7 @@ Organizm *Swiat::getEntityAt(const Position &position) {
 
 void Swiat::spawn(std::shared_ptr<Organizm> organism, bool forceInsert) {
     auto name = typeid(*organism).name();
-    logger.getDebugLogFile() << "spawned " << name << std::endl;
+    logger->getDebugLogFile() << "spawned " << name << std::endl;
     auto counter=  organismTypeCounter.find(name);
     if (counter != organismTypeCounter.end()) {
         organism->setId(++counter->second);
@@ -57,7 +57,7 @@ void Swiat::moveOrganism(const Position& oldPosition, std::shared_ptr<Organizm> 
 }
 
 void Swiat::turn() {
-    logger.getInfoLogFile() << "nowa tura" << std::endl;
+    logger->getInfoLogFile() << "nowa tura" << std::endl;
     actTurn();
     endTurn();
     changed = true;
@@ -104,7 +104,7 @@ bool Swiat::hasChanged() const {
 }
 
 void Swiat::draw(WindowManager& manager) {
-    logger.getDebugLogFile() << "Drawing" << std::endl;
+    logger->getDebugLogFile() << "Drawing" << std::endl;
     WINDOW* gameWindow = manager.getMainGameWindow();
     wclear(gameWindow);
     for (int y = 0; y < height; y++) {
@@ -118,7 +118,7 @@ void Swiat::draw(WindowManager& manager) {
         }
     }
     changed = false;
-    logger.getDebugLogFile() << "Finished drawing" << std::endl;
+    logger->getDebugLogFile() << "Finished drawing" << std::endl;
 }
 
 void Swiat::insertOrganism(std::shared_ptr<Organizm> organism) {

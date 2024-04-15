@@ -41,7 +41,7 @@ int main() {
             world.draw(windowManager);
             auto win = windowManager.getBottomWindow();
             wmove(win, 2, 1);
-            waddstr(win, logger.infoLogger.getLastOutput().c_str());
+            waddstr(win, logger->infoLogger.getLastOutput().c_str());
             windowManager.draw();
         }
     }

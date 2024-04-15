@@ -21,7 +21,7 @@ WindowManager::WindowManager(int gameWidth, int gameHeight) {
     curs_set(0);
     int screenHeight = getmaxy(stdscr);
     int screenWidth = getmaxx(stdscr);
-    logger.getDebugLogFile() << "screen w: " << screenWidth << " h:" << screenHeight << std::endl;
+    logger->getDebugLogFile() << "screen w: " << screenWidth << " h:" << screenHeight << std::endl;
     int bottomPaneHeight = 5;
     if (screenHeight - bottomPaneHeight < gameHeight || screenWidth < gameWidth) {
         endwin();
@@ -33,7 +33,7 @@ WindowManager::WindowManager(int gameWidth, int gameHeight) {
 }
 
 WINDOW *WindowManager::createWindow(int x, int y, int w, int h) {
-    logger.getDebugLogFile() << "created window x:" << x << " y:" << y << " w:" << w << " h:" << h << std::endl;
+    logger->getDebugLogFile() << "created window x:" << x << " y:" << y << " w:" << w << " h:" << h << std::endl;
     return newwin(h, w, y, x);
 }
 
