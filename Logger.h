@@ -8,35 +8,51 @@
 #include <string>
 #include <sstream>
 
+class ScrollableList;
 
 class LoggerSystem {
     class DebugLogger {
     public:
         std::ofstream debugLogFile;
         int n = 0;
+
         explicit DebugLogger();
     };
+
     class InfoLogger {
-        DebugLogger& debugLogger;
+        DebugLogger &debugLogger;
         std::stringstream lastLogStream;
         bool flushNext = false;
+    public:
+        void setScreenOutput(ScrollableList *screenOutput);
 
+    private:
+        ScrollableList *screenOutput;
     public:
         int n = 0;
         std::ofstream infoLogFile;
+
         explicit InfoLogger(DebugLogger &debugLogger);
+
         template<typename T>
-        InfoLogger& operator<<(const T& value);
+        InfoLogger &operator<<(const T &value);
+
         // Handle std::endl
-        InfoLogger& operator<<(std::ostream& (*fun)(std::ostream&));
+        InfoLogger &operator<<(std::ostream &(*fun)(std::ostream &));
+
         [[nodiscard]] std::string getLastOutput();
     };
-public:
+
     DebugLogger debuggerLogger;
     InfoLogger infoLogger;
+public:
     std::ofstream &getDebugLogFile();
+
     InfoLogger &getInfoLogFile();
-    LoggerSystem(): infoLogger(debuggerLogger) {};
+
+    LoggerSystem() : infoLogger(debuggerLogger) {};
+
+    void setScreenOutput(ScrollableList *screenOutput);
 };
 
 template<typename T>
@@ -53,4 +69,4 @@ LoggerSystem::InfoLogger &LoggerSystem::InfoLogger::operator<<(const T &value) {
     return *this;
 }
 
-extern LoggerSystem* logger;
+extern LoggerSystem *logger;

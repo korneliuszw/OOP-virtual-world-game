@@ -20,5 +20,7 @@ add_executable(Projekt1 main.cpp
         Player.cpp
         Player.h
         Player.h
+        ScrollableList.cpp
+        ScrollableList.h
 )
 target_link_libraries(Projekt1 PRIVATE ${CURSES_LIBRARIES})

@@ -3,37 +3,50 @@
 //
 
 #include "Logger.h"
+#include "ScrollableList.h"
 
 std::ofstream &LoggerSystem::getDebugLogFile() {
     this->debuggerLogger.debugLogFile << "[" << this->debuggerLogger.n << "] ";
-    this->debuggerLogger.n+=1;
+    this->debuggerLogger.n += 1;
     return this->debuggerLogger.debugLogFile;
 }
 
-LoggerSystem::InfoLogger &LoggerSystem::getInfoLogFile()  {
+LoggerSystem::InfoLogger &LoggerSystem::getInfoLogFile() {
     this->getDebugLogFile();
     this->infoLogger.infoLogFile << "[" << this->infoLogger.n << "] ";
     this->infoLogger.n += 1;
     return this->infoLogger;
 }
 
-LoggerSystem::InfoLogger::InfoLogger(LoggerSystem::DebugLogger &debugLogger) : debugLogger(debugLogger), infoLogFile("info_log.txt") {
+void LoggerSystem::setScreenOutput(ScrollableList *screenOutput) {
+    this->infoLogger.setScreenOutput(screenOutput);
+
+}
+
+LoggerSystem::InfoLogger::InfoLogger(LoggerSystem::DebugLogger &debugLogger) : debugLogger(debugLogger),
+                                                                               infoLogFile("info_log.txt") {
     // reopen the file so it it's content gets cleared
     this->infoLogFile.close();
-    this->infoLogFile.open("info_log.txt", std::ios::out |  std::ios::app);
+    this->infoLogFile.open("info_log.txt", std::ios::out | std::ios::app);
 }
 
 LoggerSystem::InfoLogger &LoggerSystem::InfoLogger::operator<<(std::ostream &(*fun)(std::ostream &)) {
     this->debugLogger.debugLogFile << std::endl;
     this->infoLogFile << std::endl;
     flushNext = true;
-    this->infoLogFile << " from str logger: " <<  lastLogStream.str() << std::endl;
+    if (screenOutput)
+        screenOutput->append(getLastOutput());
+    this->infoLogFile << " from str logger: " << lastLogStream.str() << std::endl;
     return *this;
 }
 
 std::string LoggerSystem::InfoLogger::getLastOutput() {
-    this->infoLogFile << " from str: " <<  lastLogStream.str() << flushNext << std::endl;
+    this->infoLogFile << " from str: " << lastLogStream.str() << flushNext << std::endl;
     return lastLogStream.str();
+}
+
+void LoggerSystem::InfoLogger::setScreenOutput(ScrollableList *screenOutput) {
+    InfoLogger::screenOutput = screenOutput;
 }
 
 
@@ -42,4 +55,4 @@ LoggerSystem::DebugLogger::DebugLogger() : debugLogFile("debug_log.txt") {
     this->debugLogFile.open("debug_log.txt", std::ios::out | std::ios::app);
 }
 
-LoggerSystem* logger = new LoggerSystem();
+LoggerSystem *logger = new LoggerSystem();

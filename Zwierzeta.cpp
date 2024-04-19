@@ -11,7 +11,7 @@ void Zwierzeta::act(Swiat &world) {
 }
 
 
-bool Zwierzeta::collide(Organizm * organism, Swiat & world) {
+bool Zwierzeta::collide(Organizm *organism, Swiat &world) {
     if (typeid(*this) != typeid(*organism))
         return Organizm::collide(organism, world);
     if (organism->getAge() > 0 && this->getAge() > 0)
@@ -19,8 +19,10 @@ bool Zwierzeta::collide(Organizm * organism, Swiat & world) {
     return true;
 }
 
-void Zwierzeta::mate(const Organizm* lover, Swiat & world) {
+void Zwierzeta::mate(const Organizm *lover, Swiat &world) {
     Position position = this->generateRandomLegalPosition(world, true);
+    if (position == this->getPosition())
+        return;
     auto copy = this->clone();
     copy->setPosition(std::move(position));
     logger->getInfoLogFile() << this->getName() << " rozmnozyl sie z " << lover->getName() << std::endl;
@@ -32,11 +34,12 @@ bool Zolw::didDeflectAttack(const Organizm *attacker) {
 }
 
 void Zolw::act(Swiat &world) {
-    std::uniform_int_distribution<int> dist(1,4);
+    std::uniform_int_distribution<int> dist(1, 4);
     int random = dist(rng);
     if (random == 1)
         Zwierzeta::act(world);
 }
+
 bool Lis::isLegalMove(const Position &position, Swiat &world, bool mating) {
     auto organismAtPosition = world.getEntityAt(position);
     if (organismAtPosition && organismAtPosition->getAttack() > this->getAttack())

@@ -10,6 +10,7 @@
 #include "Player.h"
 
 #define KEY_ENTER_KEYBOARD 13
+
 int main() {
     int width, height;
     std::cout << "Wysokosc: ";
@@ -29,19 +30,18 @@ int main() {
     world.spawn(std::make_shared<Trawa>(Position({2, 4})), true);
     world.spawn(std::make_shared<BarszczSosnowskiego>(Position{5, 5}), true);
     world.spawn(std::make_shared<Player>(Position{1, 2}, &windowManager), true);
-    waddstr(windowManager.getBottomWindow(), "Korneliusz Wojnicz 198349");
     int key = 0;
     while (true) {
         while ((key = getch()) != ERR) {
-            if (key == KEY_ENTER_KEYBOARD) {
+            if (windowManager.handleWindowControls(key))
+                continue;
+            else if (key == KEY_ENTER_KEYBOARD) {
+                windowManager.getScrollableList().reset();
                 world.turn();
             }
         }
         if (world.hasChanged()) {
             world.draw(windowManager);
-            auto win = windowManager.getBottomWindow();
-            wmove(win, 2, 1);
-            waddstr(win, logger->infoLogger.getLastOutput().c_str());
             windowManager.draw();
         }
     }

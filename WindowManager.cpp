@@ -7,10 +7,12 @@
 #include <cstdlib>
 #include <cstddef>
 #include <iostream>
+
+#define AUTHOR_STRING "Korneliusz Wojnicz 198349"
 using std::size_t;
 
 
-WindowManager::WindowManager(int gameWidth, int gameHeight) {
+WindowManager::WindowManager(int gameWidth, int gameHeight) : scrollableList({4, 1}) {
     screen = initscr();
     clear();
     cbreak();
@@ -29,7 +31,8 @@ WindowManager::WindowManager(int gameWidth, int gameHeight) {
         std::exit(1);
     }
     this->mainGameWindow = createWindow(0, 0, screenWidth, screenHeight - bottomPaneHeight);
-    this->bottomWindow  = createWindow(0, screenHeight - bottomPaneHeight, screenWidth, bottomPaneHeight);
+    this->bottomWindow = createWindow(0, screenHeight - bottomPaneHeight, screenWidth, bottomPaneHeight);
+    logger->setScreenOutput(&scrollableList);
 }
 
 WINDOW *WindowManager::createWindow(int x, int y, int w, int h) {
@@ -45,6 +48,10 @@ WindowManager::~WindowManager() {
 
 void WindowManager::draw() {
     wrefresh(mainGameWindow);
+    wclear(bottomWindow);
+    wmove(bottomWindow, 0, 0);
+    waddstr(bottomWindow, AUTHOR_STRING);
+    scrollableList.draw(bottomWindow);
     wrefresh(bottomWindow);
 }
 
@@ -58,5 +65,23 @@ WINDOW *WindowManager::getMainGameWindow() const {
 
 WINDOW *WindowManager::getBottomWindow() const {
     return bottomWindow;
+}
+
+bool WindowManager::handleWindowControls(int key) {
+    switch (key) {
+        case 'j':
+            scrollableList.scrollUp();
+            draw();
+            return true;
+        case 'k':
+            scrollableList.scrollDown();
+            draw();
+            return true;
+    }
+    return false;
+}
+
+ScrollableList &WindowManager::getScrollableList() {
+    return scrollableList;
 }
 
