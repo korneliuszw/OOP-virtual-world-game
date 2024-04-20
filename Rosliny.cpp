@@ -10,9 +10,12 @@ void Rosliny::act(Swiat &world) {
     if (dist(rng) != spawnRateUpperBound) {
         return;
     }
+    auto pos = this->generateRandomLegalPosition(world, true);
+    if (pos == this->getPosition())
+        return;
     auto clone = this->clone();
-    clone->setPosition(this->generateRandomLegalPosition(world));
-    logger->getInfoLogFile() << getName() << " rozmnozyl sie";
+    clone->setPosition(std::move(pos));
+    logger->getInfoLogFile() << getName() << " rozmnozyl sie" << std::endl;
     world.spawn(std::shared_ptr<Organizm>(clone));
 }
 

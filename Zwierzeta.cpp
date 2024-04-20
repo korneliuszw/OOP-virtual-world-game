@@ -27,6 +27,7 @@ void Zwierzeta::mate(const Organizm *lover, Swiat &world) {
     copy->setPosition(std::move(position));
     logger->getInfoLogFile() << this->getName() << " rozmnozyl sie z " << lover->getName() << std::endl;
     world.spawn(std::shared_ptr<Organizm>(copy));
+    this->didMate = true;
 }
 
 void Zwierzeta::serialize(std::ofstream &file) {
@@ -48,6 +49,11 @@ std::shared_ptr<Organizm> Zwierzeta::deserialize(std::ifstream &file) {
     builder.setAge(age);
     builder.setAttack(attack);
     return builder.build();
+}
+
+void Zwierzeta::endTurn() {
+    this->didMate = false;
+    Organizm::endTurn();
 }
 
 bool Zolw::didDeflectAttack(const Organizm *attacker) {

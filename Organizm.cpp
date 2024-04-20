@@ -101,9 +101,11 @@ Position Organizm::generateRandomLegalPosition(Swiat &world, bool skipOccupied) 
     for (int i = 0; i < MAX_NEIGHBOURS; i++) {
         Position pos = this->getPosition();
         translateMoveNumberToPosition(pos, i);
-        if (world.isLegalPosition(pos) && isLegalMove(pos, world, false))
+        if (world.isLegalPosition(pos) && isLegalMove(pos, world, skipOccupied))
             legalMoves.push_back(pos);
     }
+    if (legalMoves.empty())
+        return this->getPosition();
     std::uniform_int_distribution<int> dist(0, legalMoves.size() - 1);
     int index = dist(rng);
     return legalMoves[index];

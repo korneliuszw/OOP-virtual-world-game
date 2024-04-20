@@ -80,7 +80,7 @@ public:
 
     virtual ~Organizm() = default;
 
-    void endTurn();
+    virtual void endTurn();
 
     void setId(int id);
 

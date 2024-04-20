@@ -109,7 +109,8 @@ void Ability::update(const Player &player, Swiat &world) {
     if (availableUntil != 0 && availableUntil < player.getAge()) {
         cooldownUntil = availableUntil + ABILITY_COOLDOWN + 1;
         return;
-    }
+    } else if (availableUntil == 0)
+        return;
     for (int i = 0; i < MAX_NEIGHBOURS; i++) {
         auto pos = player.getPosition();
         Player::translateMoveNumberToPosition(pos, i);

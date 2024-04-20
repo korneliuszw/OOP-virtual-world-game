@@ -15,6 +15,8 @@ constexpr int MINIMAL_REPRODUCATION_AGE = 2;
 class Zwierzeta : public Organizm {
     friend class Loader;
 
+    bool didMate = false;
+
     // helper function
     void mate(const Organizm *other, Swiat &);
 
@@ -30,6 +32,8 @@ public:
     virtual void act(Swiat &world) override;
 
     bool collide(Organizm *, Swiat &) override;
+
+    virtual void endTurn();
 };
 
 class Wilk : public Zwierzeta {
