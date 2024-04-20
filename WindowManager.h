@@ -7,14 +7,16 @@
 
 #include <ncurses.h>
 #include "ScrollableList.h"
+#include "Loader.h"
 
 class WindowManager {
     WINDOW *screen;
     WINDOW *mainGameWindow;
     WINDOW *bottomWindow;
     ScrollableList scrollableList;
+    Loader &loader;
 public:
-    ScrollableList & getScrollableList();
+    ScrollableList &getScrollableList();
 
 public:
     WINDOW *getMainGameWindow() const;
@@ -25,7 +27,7 @@ private:
     WINDOW *createWindow(int x, int y, int w, int h);
 
 public:
-    WindowManager(int gameWidth, int gameHeight);
+    WindowManager(int gameWidth, int gameHeight, Loader &loader);
 
     ~WindowManager();
 

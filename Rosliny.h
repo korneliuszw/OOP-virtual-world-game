@@ -8,22 +8,31 @@
 
 #include "Organizm.h"
 
-class Rosliny: public Organizm {
+class Rosliny : public Organizm {
+    friend class Loader;
+
 protected:
     // 20% to spread
     int spawnRateUpperBound = 5;
-    Rosliny(Position&& pos, int attack = 0): Organizm(attack, 0, std::move(pos)) {}
+
+    Rosliny(Position &&pos, int attack = 0) : Organizm(attack, 0, std::move(pos)) {}
+
+    void serialize(std::ofstream &file) override;
+
+    static std::shared_ptr<Organizm> deserialize(std::ifstream &file);
+
 public:
     void act(Swiat &world) override;
 };
 
-class Trawa: public Rosliny {
+class Trawa : public Rosliny {
 protected:
     std::string name() const override {
         return "Trawa";
     }
+
 public:
-    Trawa(Position&& pos): Rosliny(std::move(pos)) {}
+    Trawa(Position &&pos) : Rosliny(std::move(pos)) {}
 
     const char symbol() override {
         return 'T';
@@ -34,13 +43,14 @@ public:
     }
 };
 
-class Mlecz: public Rosliny {
+class Mlecz : public Rosliny {
 protected:
     std::string name() const override {
         return "Mlecz";
     }
+
 public:
-    Mlecz(Position&& pos): Rosliny(std::move(pos)) {}
+    Mlecz(Position &&pos) : Rosliny(std::move(pos)) {}
 
     const char symbol() override {
         return 'M';
@@ -53,13 +63,14 @@ public:
     void act(Swiat &world) override;
 };
 
-class Guarana: public Rosliny {
+class Guarana : public Rosliny {
 protected:
     std::string name() const override {
         return "Guarana";
     }
+
 public:
-    Guarana(Position&& pos): Rosliny(std::move(pos)) {}
+    Guarana(Position &&pos) : Rosliny(std::move(pos)) {}
 
     const char symbol() override {
         return 'G';
@@ -72,13 +83,14 @@ public:
     bool collide(Organizm *collider, Swiat &world) override;
 };
 
-class WilczeJagody: public Rosliny {
+class WilczeJagody : public Rosliny {
 protected:
     std::string name() const override {
         return "Wilcze jagody";
     }
+
 public:
-    WilczeJagody(Position&& pos): Rosliny(std::move(pos), 99) {}
+    WilczeJagody(Position &&pos) : Rosliny(std::move(pos), 99) {}
 
     const char symbol() override {
         return 'J';
@@ -91,13 +103,14 @@ public:
     bool collide(Organizm *collider, Swiat &world) override;
 };
 
-class BarszczSosnowskiego: public Rosliny {
+class BarszczSosnowskiego : public Rosliny {
 protected:
     std::string name() const override {
         return "Barszcz sosnowskiego";
     }
+
 public:
-    explicit BarszczSosnowskiego(Position&& pos): Rosliny(std::move(pos), 10) {
+    explicit BarszczSosnowskiego(Position &&pos) : Rosliny(std::move(pos), 10) {
         // 12.5% to spawn
         this->spawnRateUpperBound = 8;
     }
@@ -111,9 +124,9 @@ public:
     }
 
     bool collide(Organizm *collider, Swiat &world) override;
+
     // kill every neighbour
     void act(Swiat &world) override;
 };
-
 
 #endif //PROJEKT1_ROSLINY_H

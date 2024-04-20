@@ -17,8 +17,9 @@ int main() {
     std::cin >> height;
     std::cout << "\nSzerokosc:";
     std::cin >> width;
-    WindowManager windowManager(width, height);
     Swiat world(width, height);
+    Loader loader(world);
+    WindowManager windowManager(width, height, loader);
     world.spawn(std::make_shared<Wilk>(Position({0, 0})), true);
     world.spawn(std::make_shared<Wilk>(Position({2, 2})), true);
     world.spawn(std::make_shared<Owca>(Position({3, 2})), true);

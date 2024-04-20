@@ -16,6 +16,33 @@ void Rosliny::act(Swiat &world) {
     world.spawn(std::shared_ptr<Organizm>(clone));
 }
 
+void Rosliny::serialize(std::ofstream &file) {
+    file << "R " << this->symbol() << " " << position_x(this->getPosition()) << " " << position_y(this->getPosition())
+         << " "
+         << this->getAge() << std::endl;
+}
+
+std::shared_ptr<Organizm> Rosliny::deserialize(std::ifstream &file) {
+    std::string type;
+    int x, y, age;
+    file >> type >> x >> y >> age;
+    std::shared_ptr<Organizm> ptr = nullptr;
+    if (type == "T")
+        ptr = std::make_shared<Trawa>(Position(x, y));
+    if (type == "M")
+        ptr = std::make_shared<Mlecz>(Position(x, y));
+    if (type == "G")
+        ptr = std::make_shared<Guarana>(Position(x, y));
+    if (type == "J")
+        ptr = std::make_shared<WilczeJagody>(Position(x, y));
+    if (type == "B")
+        ptr = std::make_shared<BarszczSosnowskiego>(Position(x, y));
+    if (!ptr)
+        throw std::runtime_error("Unknown plant type");
+    ptr->setAge(age);
+    return ptr;
+}
+
 void Mlecz::act(Swiat &world) {
     Rosliny::act(world);
     Rosliny::act(world);

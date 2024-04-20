@@ -29,6 +29,27 @@ void Zwierzeta::mate(const Organizm *lover, Swiat &world) {
     world.spawn(std::shared_ptr<Organizm>(copy));
 }
 
+void Zwierzeta::serialize(std::ofstream &file) {
+    file << "Z " << this->symbol() << " " << position_x(this->getPosition()) << " " << position_y(this->getPosition())
+         << " "
+         << this->getAge()
+         << " "
+         << this->getAttack() << std::endl;
+
+}
+
+std::shared_ptr<Organizm> Zwierzeta::deserialize(std::ifstream &file) {
+    ZwierzetaBuilder builder;
+    std::string type;
+    int x, y, age, attack;
+    file >> type >> x >> y >> age >> attack;
+    builder.setType(type);
+    builder.setPos(Position(x, y));
+    builder.setAge(age);
+    builder.setAttack(attack);
+    return builder.build();
+}
+
 bool Zolw::didDeflectAttack(const Organizm *attacker) {
     return attacker->getAttack() < 5;
 }
@@ -72,3 +93,59 @@ void Antylopa::act(Swiat &world) {
     this->moveThisOrganism(world, std::move(newPosition));
 }
 
+std::shared_ptr<Zwierzeta> ZwierzetaBuilder::build() {
+    if (!type)
+        throw std::runtime_error("ZwierzetaBuilder: type not set");
+    if (!pos)
+        throw std::runtime_error("ZwierzetaBuilder: position not set");
+    std::shared_ptr<Zwierzeta> organism;
+    switch (*type) {
+        case ZwierzetaType::Wilk:
+            organism = std::make_shared<Wilk>(std::move(*pos));
+            break;
+        case ZwierzetaType::Owca:
+            organism = std::make_shared<Owca>(std::move(*pos));
+            break;
+        case ZwierzetaType::Lis:
+            organism = std::make_shared<Lis>(std::move(*pos));
+            break;
+        case ZwierzetaType::Zolw:
+            organism = std::make_shared<Zolw>(std::move(*pos));
+            break;
+        case ZwierzetaType::Antylopa:
+            organism = std::make_shared<Antylopa>(std::move(*pos));
+            break;
+        default:
+            throw std::runtime_error("ZwierzetaBuilder: Unknown animal type");
+    }
+    if (attack)
+        organism->setAttack(*attack);
+    if (age)
+        organism->setAge(*age);
+    return organism;
+}
+
+void ZwierzetaBuilder::setType(const std::string &name) {
+    if (name == "W")
+        type = ZwierzetaType::Wilk;
+    else if (name == "O")
+        type = ZwierzetaType::Owca;
+    else if (name == "L")
+        type = ZwierzetaType::Lis;
+    else if (name == "Z")
+        type = ZwierzetaType::Zolw;
+    else if (name == "A")
+        type = ZwierzetaType::Antylopa;
+}
+
+void ZwierzetaBuilder::setPos(const Position &pos) {
+    this->pos = pos;
+}
+
+void ZwierzetaBuilder::setAttack(int attack) {
+    this->attack = attack;
+}
+
+void ZwierzetaBuilder::setAge(int age) {
+    this->age = age;
+}

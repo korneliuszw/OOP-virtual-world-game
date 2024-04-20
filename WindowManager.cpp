@@ -4,6 +4,7 @@
 
 #include "WindowManager.h"
 #include "Logger.h"
+#include "Loader.h"
 #include <cstdlib>
 #include <cstddef>
 #include <iostream>
@@ -12,7 +13,8 @@
 using std::size_t;
 
 
-WindowManager::WindowManager(int gameWidth, int gameHeight) : scrollableList({4, 1}) {
+WindowManager::WindowManager(int gameWidth, int gameHeight, Loader &loader) : scrollableList({4, 1}),
+                                                                              loader(loader) {
     screen = initscr();
     clear();
     cbreak();
@@ -76,6 +78,12 @@ bool WindowManager::handleWindowControls(int key) {
         case 'k':
             scrollableList.scrollDown();
             draw();
+            return true;
+        case 'l':
+            loader.load(this);
+            return true;
+        case 's':
+            loader.save();
             return true;
     }
     return false;

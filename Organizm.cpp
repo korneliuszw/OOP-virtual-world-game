@@ -19,17 +19,19 @@ int Organizm::getAttack() const {
     return attack;
 }
 
-const Position& Organizm::getPosition() const {
+const Position &Organizm::getPosition() const {
     return this->position;
 }
+
 void Organizm::endTurn() {
     age++;
 }
+
 [[nodiscard]] int Organizm::getAge() const {
     return age;
 }
 
-bool Organizm::collide(Organizm *collider, Swiat& world) {
+bool Organizm::collide(Organizm *collider, Swiat &world) {
     logger->getInfoLogFile() << collider->getName() << " wszedl na pole " << name() << std::endl;\
     if (this->didDeflectAttack(collider))
         return false;
@@ -59,11 +61,11 @@ void Organizm::moveThisOrganism(Swiat &world, Position &&newPosition) {
     }
     if (this->isAlive()) {
         logger->getInfoLogFile() << this->getName() << " przesunal sie na x=" << position_x(position)
-                                << " y=" << position_y(position) << std::endl;
+                                 << " y=" << position_y(position) << std::endl;
     }
 }
 
-Organizm::Organizm(const Organizm &right)  : enable_shared_from_this() {
+Organizm::Organizm(const Organizm &right) : enable_shared_from_this() {
     attack = right.attack;
     aggressiveness = right.aggressiveness;
     alive = right.alive;
@@ -94,7 +96,7 @@ bool Organizm::didDeflectAttack(const Organizm *attacker) {
     return false;
 }
 
-Position Organizm::generateRandomLegalPosition(Swiat &world, bool skipOccupied){
+Position Organizm::generateRandomLegalPosition(Swiat &world, bool skipOccupied) {
     std::vector<Position> legalMoves;
     for (int i = 0; i < MAX_NEIGHBOURS; i++) {
         Position pos = this->getPosition();
@@ -107,7 +109,7 @@ Position Organizm::generateRandomLegalPosition(Swiat &world, bool skipOccupied){
     return legalMoves[index];
 }
 
-void Organizm::translateMoveNumberToPosition(Position& position, int move) {
+void Organizm::translateMoveNumberToPosition(Position &position, int move) {
     switch (move) {
         case 0:
             position.first += 1;
@@ -131,4 +133,8 @@ bool Organizm::isLegalMove(const Position &position, Swiat &world, bool skipOccu
 
 void Organizm::setAttack(int attack) {
     Organizm::attack = attack;
+}
+
+void Organizm::setAge(int age) {
+    Organizm::age = age;
 }

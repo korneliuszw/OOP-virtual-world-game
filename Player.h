@@ -9,6 +9,15 @@
 #include <optional>
 
 class Player : public Zwierzeta {
+    friend class Loader;
+
+protected:
+    void serialize(std::ofstream &file) override;
+
+    static std::shared_ptr<Player> deserialize(std::ifstream &file, WindowManager *windowManager);
+
+private:
+
     WindowManager *windowManager;
 protected:
     std::string name() const override {

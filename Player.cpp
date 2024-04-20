@@ -75,3 +75,20 @@ std::optional<Position> Player::getNewPositionFromUser(Swiat &world, int key) {
         return position;
     return std::nullopt;
 }
+
+void Player::serialize(std::ofstream &file) {
+    file << "P " << this->symbol() << " " << position_x(this->getPosition()) << " " << position_y(this->getPosition())
+         << " "
+         << this->getAge()
+         << " "
+         << this->getAttack() << std::endl;
+}
+
+std::shared_ptr<Player> Player::deserialize(std::ifstream &file, WindowManager *windowManager) {
+    int x, y, age, attack;
+    file >> x >> y >> age >> attack;
+    std::shared_ptr<Player> ptr = std::make_shared<Player>(Position(x, y), windowManager);
+    ptr->setAge(age);
+    ptr->setAttack(attack);
+    return ptr;
+}
