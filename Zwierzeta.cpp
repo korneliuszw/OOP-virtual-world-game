@@ -14,7 +14,7 @@ void Zwierzeta::act(Swiat &world) {
 bool Zwierzeta::collide(Organizm *organism, Swiat &world) {
     if (typeid(*this) != typeid(*organism))
         return Organizm::collide(organism, world);
-    if (organism->getAge() > 0 && this->getAge() > 0)
+    if (organism->getAge() > MINIMAL_REPRODUCATION_AGE && this->getAge() > MINIMAL_REPRODUCATION_AGE)
         this->mate(organism, world);
     return true;
 }

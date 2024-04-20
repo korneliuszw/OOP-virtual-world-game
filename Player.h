@@ -8,17 +8,40 @@
 #include "Zwierzeta.h"
 #include <optional>
 
+class Player;
+
+constexpr int ABILITY_DURATION = 5;
+constexpr int ABILITY_COOLDOWN = 5;
+
+class Ability {
+    int availableUntil = 0;
+    int cooldownUntil = 0;
+public:
+    void use(const Player &player);
+
+    int getAvailableUntil() const;
+
+    int getCooldownUntil() const;
+
+    void update(const Player &player, Swiat &world);
+
+    Ability() = default;
+
+    Ability(int availableUntil, int cooldownUntil);
+
+};
+
+
 class Player : public Zwierzeta {
     friend class Loader;
 
+    Ability ability;
+    WindowManager *windowManager;
 protected:
     void serialize(std::ofstream &file) override;
 
     static std::shared_ptr<Player> deserialize(std::ifstream &file, WindowManager *windowManager);
 
-private:
-
-    WindowManager *windowManager;
 protected:
     std::string name() const override {
         return "Gracz";

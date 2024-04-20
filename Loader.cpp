@@ -7,6 +7,7 @@
 #include "Zwierzeta.h"
 #include "Rosliny.h"
 #include "Player.h"
+#include "Logger.h"
 
 void Loader::save() {
     std::ofstream file;
@@ -16,6 +17,7 @@ void Loader::save() {
         for (auto &organism: entries.second)
             organism->serialize(file);
     }
+    logger->getInfoLogFile() << "Gra zapisana" << std::endl;
     file.close();
 }
 
@@ -40,6 +42,7 @@ void Loader::load(WindowManager *windowManager) {
         if (organism)
             this->swiat.spawn(organism, true);
     }
+    logger->getInfoLogFile() << "Gra wczytana" << std::endl;
     file.close();
 }
 

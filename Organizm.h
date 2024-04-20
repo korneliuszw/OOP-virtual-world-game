@@ -18,6 +18,8 @@ class Organizm
 public:
     void setAttack(int attack);
 
+    static void translateMoveNumberToPosition(Position &position, int move);
+
 private:
     int aggressiveness = 0;
     Position position;
@@ -41,8 +43,6 @@ protected:
     std::string organismName;
 
     virtual bool isLegalMove(const Position &position, Swiat &world, bool skipOccupied);
-
-    static void translateMoveNumberToPosition(Position &position, int move);
 
     Position generateRandomLegalPosition(Swiat &world, bool skipOccupied = false);
 

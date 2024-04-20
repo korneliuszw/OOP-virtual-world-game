@@ -36,12 +36,10 @@ LoggerSystem::InfoLogger &LoggerSystem::InfoLogger::operator<<(std::ostream &(*f
     flushNext = true;
     if (screenOutput)
         screenOutput->append(getLastOutput());
-    this->infoLogFile << " from str logger: " << lastLogStream.str() << std::endl;
     return *this;
 }
 
 std::string LoggerSystem::InfoLogger::getLastOutput() {
-    this->infoLogFile << " from str: " << lastLogStream.str() << flushNext << std::endl;
     return lastLogStream.str();
 }
 

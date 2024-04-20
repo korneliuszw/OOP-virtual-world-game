@@ -10,6 +10,8 @@
 #include "Organizm.h"
 #include "Loader.h"
 
+constexpr int MINIMAL_REPRODUCATION_AGE = 2;
+
 class Zwierzeta : public Organizm {
     friend class Loader;
 
