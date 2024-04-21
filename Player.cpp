@@ -81,7 +81,7 @@ std::optional<Position> Player::getNewPositionFromUser(Swiat &world, int key) {
 }
 
 void Player::serialize(std::ofstream &file) {
-    file << "P " << this->symbol() << " " << position_x(this->getPosition()) << " " << position_y(this->getPosition())
+    file << "P " << position_x(this->getPosition()) << " " << position_y(this->getPosition())
          << " "
          << this->getAge()
          << " "
