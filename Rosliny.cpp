@@ -5,15 +5,19 @@
 #include "Rosliny.h"
 #include "Logger.h"
 
+constexpr int MINIMAL_REPRODUCATION_AGE = 2;
+
 void Rosliny::act(Swiat &world) {
     std::uniform_int_distribution<int> dist(1, spawnRateUpperBound);
-    if (dist(rng) != spawnRateUpperBound) {
+    int res = dist(rng);
+    if (getAge() < MINIMAL_REPRODUCATION_AGE || res != spawnRateUpperBound) {
         return;
     }
     auto pos = this->generateRandomLegalPosition(world, true);
     if (pos == this->getPosition())
         return;
     auto clone = this->clone();
+    clone->setAge(0);
     clone->setPosition(std::move(pos));
     logger->getInfoLogFile() << getName() << " rozmnozyl sie" << std::endl;
     world.spawn(std::shared_ptr<Organizm>(clone));
@@ -55,12 +59,12 @@ void Mlecz::act(Swiat &world) {
 bool Guarana::collide(Organizm *collider, Swiat &world) {
     collider->setAttack(collider->getAttack() + 3);
     this->kill();
-    logger->getInfoLogFile() << collider->getName() << " zjadl guaren i zyskal +3 do ataku";
+    logger->getInfoLogFile() << collider->getName() << " zjadl guaren i zyskal +3 do ataku" << std::endl;
     return true;
 }
 
 bool WilczeJagody::collide(Organizm *collider, Swiat &world) {
-    logger->getInfoLogFile() << collider->getName() << " zjadl wilcze jagody i umiera";
+    logger->getInfoLogFile() << collider->getName() << " zjadl wilcze jagody i umiera" << std::endl;
     collider->kill();
     this->kill();
     return true;

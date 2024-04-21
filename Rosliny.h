@@ -13,7 +13,7 @@ class Rosliny : public Organizm {
 
 protected:
     // 20% to spread
-    int spawnRateUpperBound = 5;
+    int spawnRateUpperBound = 8;
 
     Rosliny(Position &&pos, int attack = 0) : Organizm(attack, 0, std::move(pos)) {}
 
@@ -70,7 +70,9 @@ protected:
     }
 
 public:
-    Guarana(Position &&pos) : Rosliny(std::move(pos)) {}
+    Guarana(Position &&pos) : Rosliny(std::move(pos)) {
+        spawnRateUpperBound = 12;
+    }
 
     const char symbol() override {
         return 'G';
@@ -112,7 +114,7 @@ protected:
 public:
     explicit BarszczSosnowskiego(Position &&pos) : Rosliny(std::move(pos), 10) {
         // 12.5% to spawn
-        this->spawnRateUpperBound = 8;
+        this->spawnRateUpperBound = 10;
     }
 
     const char symbol() override {

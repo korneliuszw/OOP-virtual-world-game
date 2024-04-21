@@ -71,8 +71,6 @@ Organizm::Organizm(const Organizm &right) : enable_shared_from_this() {
     alive = right.alive;
     position = right.position;
     age = right.age;
-    std::random_device dev;
-    rng = std::mt19937(dev());
 }
 
 void Organizm::setPosition(Position &&position) {
@@ -130,7 +128,7 @@ void Organizm::translateMoveNumberToPosition(Position &position, int move) {
 
 bool Organizm::isLegalMove(const Position &position, Swiat &world, bool skipOccupied) {
     // when mating don't spawn in occupied fields because it could let to a lot of spawns fast
-    return !(skipOccupied && world.getEntityAt(position));
+    return !skipOccupied || world.getEntityAt(position) == nullptr;
 }
 
 void Organizm::setAttack(int attack) {
@@ -140,3 +138,5 @@ void Organizm::setAttack(int attack) {
 void Organizm::setAge(int age) {
     Organizm::age = age;
 }
+
+std::mt19937 rng = std::mt19937(std::random_device()());

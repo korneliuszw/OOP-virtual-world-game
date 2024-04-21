@@ -24,6 +24,7 @@ void Zwierzeta::mate(const Organizm *lover, Swiat &world) {
     if (position == this->getPosition())
         return;
     auto copy = this->clone();
+    copy->setAge(0);
     copy->setPosition(std::move(position));
     logger->getInfoLogFile() << this->getName() << " rozmnozyl sie z " << lover->getName() << std::endl;
     world.spawn(std::shared_ptr<Organizm>(copy));

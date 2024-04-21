@@ -23,6 +23,8 @@ WindowManager::WindowManager(int gameWidth, int gameHeight, Loader &loader) : sc
     keypad(screen, TRUE);
     nonl();
     curs_set(0);
+    clear();
+    refresh();
     int screenHeight = getmaxy(stdscr);
     int screenWidth = getmaxx(stdscr);
     logger->getDebugLogFile() << "screen w: " << screenWidth << " h:" << screenHeight << std::endl;

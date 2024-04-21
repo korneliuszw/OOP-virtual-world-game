@@ -30,12 +30,8 @@ private:
 protected:
     virtual bool didDeflectAttack(const Organizm *attacker);
 
-    std::mt19937 rng;
-
     Organizm(int attack, int aggressiveness, Position &&position) : attack(attack), aggressiveness(aggressiveness),
                                                                     position(std::move(position)) {
-        std::random_device dev;
-        rng = std::mt19937(dev());
     }
 
     [[nodiscard]] virtual std::string name() const = 0;
@@ -88,3 +84,6 @@ public:
 
     bool operator==(const Organizm &other);
 };
+
+
+extern std::mt19937 rng;

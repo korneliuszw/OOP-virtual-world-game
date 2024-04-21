@@ -114,7 +114,7 @@ void Swiat::draw(WindowManager &manager) {
             if (entity)
                 waddch(gameWindow, entity->symbol());
             else
-                waddch(gameWindow, 'X');
+                waddch(gameWindow, '_');
         }
     }
     changed = false;
