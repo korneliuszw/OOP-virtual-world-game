@@ -15,6 +15,10 @@ class WindowManager {
     WINDOW *bottomWindow;
     ScrollableList scrollableList;
     Loader &loader;
+    std::string statusText;
+public:
+    void setStatusText(const std::string &statusText);
+
 public:
     ScrollableList &getScrollableList();
 

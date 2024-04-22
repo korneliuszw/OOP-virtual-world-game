@@ -6,15 +6,27 @@
 #include "Logger.h"
 #include <thread>
 
+#define ABILITY_READ "Calopalenie jest gotowe"
+#define ABILITY_NOT_READY "Calopalenie nie jest gotowe"
+#define ABILITY_ACTIVE "Calopalenie jest aktywne"
+
 void Player::act(Swiat &world) {
+    ability.updateTimers(*this);
     world.draw(*windowManager);
+    wmove(windowManager->getBottomWindow(), 5, 0);
+    if (ability.isActivated(*this))
+        windowManager->setStatusText(ABILITY_ACTIVE);
+    else if (ability.isAvailable(*this))
+        windowManager->setStatusText(ABILITY_READ);
+    else
+        windowManager->setStatusText(ABILITY_NOT_READY);
     windowManager->draw();
     logger->getInfoLogFile() << "Ruch gracza" << std::endl;
     WINDOW *gameWindow = windowManager->getMainGameWindow();
     curs_set(1);
     wmove(gameWindow, this->getPosition().second, this->getPosition().first + 1);
     wrefresh(gameWindow);
-    while (doPlayerActions(world)) {
+    while (doPlayerActions(world, windowManager)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(75));
     }
     ability.update(*this, world);
@@ -25,14 +37,17 @@ bool Player::collide(Organizm *organizm, Swiat &swiat) {
     return Zwierzeta::collide(organizm, swiat);
 }
 
-bool Player::doPlayerActions(Swiat &world) {
+bool Player::doPlayerActions(Swiat &world, WindowManager *windowManager) {
     int key;
     while ((key = getch()) != ERR) {
         if (windowManager->handleWindowControls(key))
             continue;
         switch (key) {
             case 'e': {
-                ability.use(*this);
+                if (ability.use(*this)) {
+                    windowManager->setStatusText(ABILITY_ACTIVE);
+                    windowManager->draw();
+                }
                 continue;
             }
             case KEY_DOWN:
@@ -98,18 +113,16 @@ std::shared_ptr<Player> Player::deserialize(std::ifstream &file, WindowManager *
     return ptr;
 }
 
-void Ability::use(const Player &player) {
-    if (availableUntil > player.getAge() || cooldownUntil > player.getAge())
-        return;
+bool Ability::use(const Player &player) {
+    if (!this->isAvailable(player))
+        return false;
     logger->getInfoLogFile() << "Uzyto calopalenia" << std::endl;
     availableUntil = player.getAge() + ABILITY_DURATION;
+    return true;
 }
 
 void Ability::update(const Player &player, Swiat &world) {
-    if (availableUntil != 0 && availableUntil < player.getAge()) {
-        cooldownUntil = availableUntil + ABILITY_COOLDOWN + 1;
-        return;
-    } else if (availableUntil == 0)
+    if (!isActivated(player))
         return;
     for (int i = 0; i < MAX_NEIGHBOURS; i++) {
         auto pos = player.getPosition();
@@ -132,4 +145,22 @@ int Ability::getAvailableUntil() const {
 
 int Ability::getCooldownUntil() const {
     return cooldownUntil;
+}
+
+bool Ability::isAvailable(const Player &player) const {
+    return availableUntil <= player.getAge() && cooldownUntil <= player.getAge();
+}
+
+bool Ability::isActivated(const Player &player) const {
+    return availableUntil > player.getAge();
+}
+
+void Ability::updateTimers(const Player &player) {
+    if (availableUntil != 0 && availableUntil <= player.getAge() && availableUntil > cooldownUntil) {
+        logger->getInfoLogFile() << "Calopalenie wygaslo" << std::endl;
+        cooldownUntil = availableUntil + ABILITY_COOLDOWN;
+        return;
+    } else if (availableUntil == 0 || availableUntil <= cooldownUntil)
+        return;
+
 }

@@ -10,10 +10,11 @@
 #include <iostream>
 
 #define AUTHOR_STRING "Korneliusz Wojnicz 198349"
+#define HELP "j/k - przewijanie logow strzalki - sterowanie graczem enter - koniec tury s - zapis l - odczyt e - umiejetnosc"
 using std::size_t;
 
 
-WindowManager::WindowManager(int gameWidth, int gameHeight, Loader &loader) : scrollableList({4, 1}),
+WindowManager::WindowManager(int gameWidth, int gameHeight, Loader &loader) : scrollableList({4, 2}),
                                                                               loader(loader) {
     screen = initscr();
     clear();
@@ -28,7 +29,7 @@ WindowManager::WindowManager(int gameWidth, int gameHeight, Loader &loader) : sc
     int screenHeight = getmaxy(stdscr);
     int screenWidth = getmaxx(stdscr);
     logger->getDebugLogFile() << "screen w: " << screenWidth << " h:" << screenHeight << std::endl;
-    int bottomPaneHeight = 5;
+    int bottomPaneHeight = 7;
     if (screenHeight - bottomPaneHeight < gameHeight || screenWidth < gameWidth) {
         endwin();
         std::cerr << "ERROR: Current window can't fit the game\n";
@@ -55,7 +56,13 @@ void WindowManager::draw() {
     wclear(bottomWindow);
     wmove(bottomWindow, 0, 0);
     waddstr(bottomWindow, AUTHOR_STRING);
+    wmove(bottomWindow, 1, 0);
+    waddstr(bottomWindow, HELP);
     scrollableList.draw(bottomWindow);
+    if (!statusText.empty()) {
+        wmove(bottomWindow, 6, 0);
+        waddstr(bottomWindow, statusText.c_str());
+    }
     wrefresh(bottomWindow);
 }
 
@@ -93,5 +100,9 @@ bool WindowManager::handleWindowControls(int key) {
 
 ScrollableList &WindowManager::getScrollableList() {
     return scrollableList;
+}
+
+void WindowManager::setStatusText(const std::string &statusText) {
+    WindowManager::statusText = statusText;
 }
 

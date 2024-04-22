@@ -17,13 +17,20 @@ class Ability {
     int availableUntil = 0;
     int cooldownUntil = 0;
 public:
-    void use(const Player &player);
+    bool use(const Player &player);
 
     int getAvailableUntil() const;
 
     int getCooldownUntil() const;
 
+    bool isAvailable(const Player &player) const;
+
+    bool isActivated(const Player &player) const;
+
+
     void update(const Player &player, Swiat &world);
+
+    void updateTimers(const Player &player);
 
     Ability() = default;
 
@@ -64,7 +71,7 @@ public:
     void act(Swiat &world) override;
 
     // return true if there are more actions to be done
-    bool doPlayerActions(Swiat &world);
+    bool doPlayerActions(Swiat &world, WindowManager *windowManager);
 
     std::optional<Position> getNewPositionFromUser(Swiat &world, int key);
 
